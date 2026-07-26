@@ -31,7 +31,7 @@ export default function AssistantChatPage() {
   useEffect(() => {
     load();
     if (isAdmin) {
-      fetch('/api/admin/assistants').then(r => r.json()).then((data: User[]) => setAssistants(data));
+      fetch('/api/admin/assistants').then(r => r.json()).then((data: User[] | {error:string}) => { if (Array.isArray(data)) setAssistants(data); });
     }
   }, [isAdmin]);
 
