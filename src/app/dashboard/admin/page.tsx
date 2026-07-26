@@ -30,21 +30,25 @@ export default function AdminReviewQueue() {
   const pending = submissions.filter(s => s.status === 'pending');
   const reviewed = submissions.filter(s => s.status !== 'pending');
 
-  if (loading) return <p style={{ color: 'var(--ink-500)' }}>Loading...</p>;
+  if (loading) return <p style={{ color: 'var(--text-mute)', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>Loading...</p>;
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Review Queue</h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 32 }}>Review and approve/reject community collaborator submissions.</p>
+      <div className="dash-page-header">
+        <div>
+          <h1>Review Queue</h1>
+          <div className="dash-header-sub">Review and approve/reject community collaborator submissions.</div>
+        </div>
+      </div>
 
       {rejectModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-          <div style={{ background: '#fff', borderRadius: 16, padding: 28, width: 420, maxWidth: '90vw' }}>
+          <div style={{ background: '#fff', borderRadius: 18, padding: 28, width: 420, maxWidth: '90vw', border: '1px solid rgba(27,31,42,0.07)' }}>
             <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, marginBottom: 12 }}>Reject Submission</h3>
-            <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="Reason for rejection..." style={{ width: '100%', minHeight: 80, padding: 10, borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', resize: 'vertical' }} />
+            <textarea value={rejectReason} onChange={e => setRejectReason(e.target.value)} placeholder="Reason for rejection..." style={{ width: '100%', minHeight: 80, padding: 10, borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', resize: 'vertical' }} />
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 16 }}>
-              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--ink-200)', background: '#fff', cursor: 'pointer', fontSize: 14 }}>Cancel</button>
-              <button onClick={() => handleAction(rejectModal, 'rejected', rejectReason)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#ef4444', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 14 }}>Reject</button>
+              <button onClick={() => { setRejectModal(null); setRejectReason(''); }} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', cursor: 'pointer', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>Cancel</button>
+              <button onClick={() => handleAction(rejectModal, 'rejected', rejectReason)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#ef4444', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 14, fontFamily: 'Inter, sans-serif' }}>Reject</button>
             </div>
           </div>
         </div>
@@ -52,22 +56,22 @@ export default function AdminReviewQueue() {
 
       {pending.length > 0 && (
         <>
-          <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 16 }}>Pending ({pending.length})</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 40 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 600, fontFamily: 'Fraunces, serif', color: 'var(--text-dark)', marginBottom: 14 }}>Pending ({pending.length})</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 36 }}>
             {pending.map(s => {
               let payload: Record<string, string> = {}; try { payload = JSON.parse(s.payload); } catch {}
               return (
-                <div key={s.id} style={{ background: '#fff', borderRadius: 14, padding: '20px 24px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <span style={{ padding: '3px 10px', borderRadius: 8, fontSize: 11, fontWeight: 600, textTransform: 'uppercase', background: 'var(--ink-100)', color: 'var(--ink-600)' }}>{s.type}</span>
-                    <span style={{ fontSize: 13, color: 'var(--ink-500)' }}>by {s.submitter.name}</span>
-                    <span style={{ fontSize: 12, color: 'var(--ink-400)', marginLeft: 'auto' }}>{new Date(s.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                <div key={s.id} className="dash-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
+                    <span className={`type-badge ${s.type}`}>{s.type}</span>
+                    <span className="dash-card-meta">by {s.submitter.name}</span>
+                    <span className="dash-card-meta" style={{ marginLeft: 'auto' }}>{new Date(s.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                   </div>
-                  <h3 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 4 }}>{payload.title || 'Untitled'}</h3>
-                  <p style={{ fontSize: 13, color: 'var(--ink-500)', lineHeight: 1.5 }}>{payload.description?.slice(0, 200) || 'No description'}</p>
-                  <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                    <button onClick={() => handleAction(s.id, 'approved')} style={{ padding: '8px 20px', borderRadius: 10, border: 'none', background: '#10b981', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Approve</button>
-                    <button onClick={() => setRejectModal(s.id)} style={{ padding: '8px 20px', borderRadius: 10, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Reject</button>
+                  <div className="dash-card-title" style={{ fontSize: 16 }}>{payload.title || 'Untitled'}</div>
+                  <p style={{ fontSize: 13, color: 'var(--text-mute)', lineHeight: 1.5, margin: '4px 0 0' }}>{payload.description?.slice(0, 200) || 'No description'}</p>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                    <button onClick={() => handleAction(s.id, 'approved')} style={{ padding: '8px 20px', borderRadius: 10, border: 'none', background: '#10b981', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Approve</button>
+                    <button onClick={() => setRejectModal(s.id)} style={{ padding: '8px 20px', borderRadius: 10, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Reject</button>
                   </div>
                 </div>
               );
@@ -78,22 +82,29 @@ export default function AdminReviewQueue() {
 
       {reviewed.length > 0 && (
         <>
-          <h2 style={{ fontSize: 18, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 16 }}>Reviewed ({reviewed.length})</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 600, fontFamily: 'Fraunces, serif', color: 'var(--text-dark)', marginBottom: 14 }}>Reviewed ({reviewed.length})</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {reviewed.map(s => {
               let payload: Record<string, string> = {}; try { payload = JSON.parse(s.payload); } catch {}
-              const color = s.status === 'approved' ? '#10b981' : '#ef4444';
               return (
-                <div key={s.id} style={{ background: '#fff', borderRadius: 12, padding: '14px 20px', boxShadow: '0 1px 2px rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 10, fontWeight: 600, textTransform: 'uppercase', background: 'var(--ink-100)', color: 'var(--ink-600)' }}>{s.type}</span>
-                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ink-900)', flex: 1 }}>{payload.title || 'Untitled'}</span>
-                  <span style={{ fontSize: 12, color: 'var(--ink-400)' }}>by {s.submitter.name}</span>
-                  <span style={{ padding: '3px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: `${color}15`, color, textTransform: 'capitalize' }}>{s.status}</span>
+                <div key={s.id} className="dash-card" style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <span className={`type-badge ${s.type}`}>{s.type}</span>
+                  <span className="dash-card-title" style={{ flex: 1, fontSize: 14 }}>{payload.title || 'Untitled'}</span>
+                  <span className="dash-card-meta">by {s.submitter.name}</span>
+                  <span className={`status-pill ${s.status}`}>{s.status}</span>
                 </div>
               );
             })}
           </div>
         </>
+      )}
+
+      {pending.length === 0 && reviewed.length === 0 && (
+        <div className="dash-empty">
+          <div className="dash-empty-icon">📋</div>
+          <h3>All caught up</h3>
+          <p>No submissions to review right now.</p>
+        </div>
       )}
     </div>
   );
