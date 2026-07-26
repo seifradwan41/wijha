@@ -45,30 +45,30 @@ export default function AssistantChatPage() {
 
   useEffect(() => {
     load();
-    if (isAdmin) {
-      fetch('/api/admin/assistants').then(r => r.json()).then((data: User[] | {error:string}) => { if (Array.isArray(data)) setAssistants(data); });
-      loadWords();
-    }
-  }, [isAdmin]);
+    fetch('/api/admin/assistants').then(r => r.json()).then((data: User[] | {error:string}) => { if (Array.isArray(data)) setAssistants(data); });
+    loadWords();
+  }, []);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
   const lastLoggedRef = useRef<string>('');
 
   useEffect(() => {
-    if (!isAdmin || !selectedAssistant || !newMessage.trim() || watchWords.length === 0) return;
+    if (!newMessage.trim() || watchWords.length === 0) return;
     const lower = newMessage.toLowerCase();
     const matched = watchWords.filter(w => lower.includes(w.word.toLowerCase()));
     if (matched.length === 0) return;
     const key = matched.map(w => w.word).sort().join(',');
     if (key === lastLoggedRef.current) return;
     lastLoggedRef.current = key;
+    const target = isAdmin ? selectedAssistant : userId;
+    if (!target) return;
     const timer = setTimeout(() => {
-      fetch('/api/admin/watchwords/hits', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: newMessage, assistantId: selectedAssistant }) });
+      fetch('/api/admin/watchwords/hits', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: newMessage, assistantId: target }) });
       loadWords();
     }, 600);
     return () => clearTimeout(timer);
-  }, [newMessage, isAdmin, selectedAssistant, watchWords]);
+  }, [newMessage, isAdmin, selectedAssistant, watchWords, userId]);
 
   const handleSend = async () => {
     if ((!newMessage.trim() && !pendingImage)) return;
