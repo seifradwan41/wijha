@@ -115,7 +115,10 @@ export default function OnboardingPage() {
             <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 20, fontWeight: 600, marginBottom: 8 }}>Set Your Password</h2>
             <p style={{ color: 'var(--ink-500)', fontSize: 14, marginBottom: 20 }}>If you want to change the temporary password your admin set, do it now. You can skip this if you prefer.</p>
             <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New password (min 6 characters)" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, marginBottom: 12, boxSizing: 'border-box' }} />
-            <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm password" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, marginBottom: 20, boxSizing: 'border-box' }} />
+            <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm password" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, marginBottom: 4, boxSizing: 'border-box' }} />
+            <p style={{ fontSize: 12, color: 'var(--ink-400)', marginBottom: 20, lineHeight: 1.5 }}>
+              Tip: Use a mix of uppercase, lowercase, numbers, and symbols (8+ characters recommended) to make your password stronger.
+            </p>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button onClick={() => setStep('terms')} style={{ padding: '10px 24px', borderRadius: 10, border: '1px solid var(--ink-200)', background: '#fff', fontWeight: 500, fontSize: 14, cursor: 'pointer' }}>Skip</button>
               <button onClick={async () => { const ok = await handlePasswordChange(); if (ok) setStep('terms'); }} disabled={loading} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer', opacity: loading ? 0.5 : 1 }}>{loading ? 'Saving...' : 'Continue'}</button>

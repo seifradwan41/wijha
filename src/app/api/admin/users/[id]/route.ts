@@ -51,6 +51,15 @@ export const DELETE = withRateLimit(async function DELETE(req: Request, { params
     }
   }
 
-  await prisma.user.delete({ where: { id } });
+  await prisma.$transaction([
+    prisma.course.deleteMany({ where: { teacherId: id } }),
+    prisma.eventNews.deleteMany({ where: { teacherId: id } }),
+    prisma.notification.deleteMany({ where: { OR: [{ recipientId: id }, { sentBy: id }] } }),
+    prisma.communityCollaboratorSubmission.deleteMany({ where: { submittedBy: id } }),
+    prisma.chatThread.deleteMany({ where: { OR: [{ openedBy: id }, { assignedTo: id }] } }),
+    prisma.adminAssistantMessage.deleteMany({ where: { OR: [{ senderId: id }, { recipientId: id }] } }),
+    prisma.termsAcceptance.deleteMany({ where: { userId: id } }),
+    prisma.user.delete({ where: { id } }),
+  ]);
   return NextResponse.json({ ok: true });
 });
