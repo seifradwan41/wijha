@@ -1,329 +1,330 @@
-# Wijha Platform - Quick Start
+# Wijha — SAT/ACT Tutoring Platform
 
-## Overview
-Wijha is a public SAT/ACT tutoring directory platform with bilingual support and WhatsApp integration.
+A public directory of SAT/ACT tutoring courses in the Middle East. Students browse the full site with no account — teachers and collaborators manage content behind login-protected dashboards.
 
-## Files in this project
+## Quick Start
 
-This repository contains a complete Next.js application implementing Wijha according to the technical specifications.
-
-### Core Pages (Public Site)
-- `/` - Home page with featured teachers and events
-- `/category/[category]` - Category pages (SAT, ACT, Other)
-- `/category/[category]/[subcategory]` - Subcategory pages
-- `/teacher/[teacherId]` - Teacher profiles
-- `/course/[courseId]` - Course details
-- `/event/[eventId]` - Event/News details
-- `/search` - Global search with filters
-- `/terms` - Terms & conditions
-
-### Internal Dashboards
-- `/dashboard/teacher/` - Teacher profile and course management
-- `/dashboard/admin/` - Admin dashboard for account/content management
-- `/dashboard/assistant/` - Admin assistant dashboard
-- `/dashboard/collaborator/` - Community collaborator submission portal
-
-### API Endpoints
-- `GET /api/data` - Public data fetcher
-- `GET /api/notifications` - User notifications
-- `PATCH /api/notifications` - Mark notifications as read
-
-## Technology Stack
-
-### Framework
-- Next.js 14 (App Router)
-- React 18
-- TypeScript
-
-### Styling
-- Tailwind CSS
-
-### Database
-- PostgreSQL + Prisma ORM
-- Full data model from `02-data-model.md`
-
-### Authentication
-- NextAuth (internal roles only)
-- Supports: admin, admin_assistant, teacher, community_collaborator
-
-### Internationalization
-- next-intl (i18n)
-- RTL support for Arabic
-
-### Image Storage
-- Local for MVP
-- Cloudinary/S3 ready
-
-## Development Setup
-
-### Prerequisites
 ```bash
-node (v18+)
-postgresql
-```
-
-### Setup Commands
-```bash
-# Install dependencies
+# 1. Install dependencies
 npm install
 
-# Generate Prisma client from schema
+# 2. Generate Prisma client
 npx prisma generate
 
-# Seed database with sample data
-npm run db:seed  # If available
+# 3. Push schema to database
+npx prisma db push
 
-# Start development server
+# 4. Seed sample data (idempotent, safe to re-run)
+npx tsx scripts/seed.ts
+
+# 5. Start dev server
 npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm run start
-
-# Run linting
-npm run lint
 ```
 
-### Environment Variables
-Create `.env.local`:
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/wijha_db
-NEXTAUTH_SECRET=your-next-auth-secret
-NEXTAUTH_URL=http://localhost:3000
+Open [http://localhost:3000](http://localhost:3000).
+
+## Login Credentials
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | `admin@wijha.com` | `password123` |
+| Admin Assistant | `assistant@wijha.com` | `password123` |
+| Teacher | `amr@wijha.com` | `password123` |
+| Teacher | `sarah@wijha.com` | `password123` |
+| Teacher | `michael@wijha.com` | `password123` |
+| Teacher | `aisha@wijha.com` | `password123` |
+| Collaborator | `layla@wijha.com` | `password123` |
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Custom CSS with design tokens (no Tailwind) |
+| Database | PostgreSQL (Neon) |
+| ORM | Prisma |
+| Auth | NextAuth v5 (Credentials provider, JWT) |
+| Passwords | bcryptjs |
+
+### Design Tokens
+
+Defined in `src/app/globals.css`:
+
+```css
+--ink-900: #12182B    /* dark backgrounds */
+--paper: #F5F2EA      /* warm off-white */
+--blue: #2F6FED       /* primary accent */
+--teal: #2E7D8C       /* secondary accent */
 ```
 
-## Key Features
+**Fonts:** Fraunces (headings), Inter (body), IBM Plex Mono (utility/labels).
 
-### Public Site (0 login required)
-- Zero account barrier for students
-- Polish, magazine-like design
-- WhatsApp-first contact (wa.me links)
-- Bilingual support (Arabic/English)
-- Rotating category banners
-- Global search with filters
+## Architecture
+
+### Public Pages (no login required)
+
+All public pages fetch data from Prisma at request time (server components). No hardcoded data.
+
+| Route | File | Description |
+|---|---|---|
+| `/` | `src/app/page.tsx` | Homepage — hero, category cards, teacher row, events/news carousel, mission, search CTA |
+| `/category/[category]` | `src/app/category/[category]/page.tsx` | Category page — subcategory cards, teacher list |
+| `/category/[category]/[subcategory]` | `src/app/category/[category]/[subcategory]/page.tsx` | Subcategory — expandable teacher cards with courses/events |
+| `/teacher/[teacherId]` | `src/app/teacher/[teacherId]/page.tsx` | Teacher profile — banner, two-column layout, fact panel, courses |
+| `/course/[courseId]` | `src/app/course/[courseId]/page.tsx` | Course detail — fact grid, price, WhatsApp link, similar courses |
+| `/event/[eventId]` | `src/app/event/[eventId]/page.tsx` | Event/news detail — description, WhatsApp CTA |
+| `/search` | `src/app/search/page.tsx` | Search — filter panel, course cards, teacher cards |
+| `/terms` | `src/app/terms/page.tsx` | Terms of service |
+
+### Client Components
+
+| File | Purpose |
+|---|---|
+| `src/components/ConstellationHero.tsx` | Animated SVG constellation hero |
+| `src/components/CategoryPaths.tsx` | Rotating teacher photo category cards |
+| `src/components/ScrollReveal.tsx` | Scroll-triggered fade-in animation |
+| `src/components/EventsNews.tsx` | Events/news carousel (takes `events` and `news` props) |
+| `src/components/PublicNav.tsx` | Top navigation bar (hidden on `/dashboard/*` and `/login`) |
+| `src/components/PublicFooter.tsx` | Site footer (hidden on `/dashboard/*` and `/login`) |
+| `src/components/Providers.tsx` | SessionProvider wrapper for client-side auth |
+| `src/app/category/[category]/CategoryTeachers.tsx` | Client-side rotation animation for category cards |
+| `src/app/category/[category]/[subcategory]/SubcategoryTeacherList.tsx` | Expandable teacher cards with courses/events |
 
 ### Teacher Dashboard
-- Profile editor with preview
-- Course management (create, draft, publish)
-- Event/News submission workflow
-- Self-service (no admin approval needed for own content)
 
-### Community Collaborator Dashboard
-- Submit course/event/news submissions
-- Track submission status (pending/approved/rejected)
+| Route | File | Description |
+|---|---|---|
+| `/dashboard/teacher` | `src/app/dashboard/teacher/page.tsx` | Overview — stat cards (courses, events, profile status) |
+| `/dashboard/teacher/profile` | `src/app/dashboard/teacher/profile/page.tsx` | Profile editor with live preview |
+| `/dashboard/teacher/courses` | `src/app/dashboard/teacher/courses/page.tsx` | Course CRUD — create, edit, publish/unpublish/delete |
+| `/dashboard/teacher/events` | `src/app/dashboard/teacher/events/page.tsx` | Events CRUD — create, submit for review, delete |
 
-### Admin Dashboards
-- Admin: Full account/content management
-- Admin Assistant: Day-to-day moderation
-- Account suspension with required reason
-- Content review and approval
-- Notification system
-- Chat/feature request inbox
+Layout: `src/app/dashboard/teacher/layout.tsx` — sidebar with 240px width.
 
-## Build & Deployment
+### Collaborator Dashboard
 
-### Local Development
-```bash
-npm install
-npx prisma generate
-npm run dev
-```
+| Route | File | Description |
+|---|---|---|
+| `/dashboard/collaborator` | `src/app/dashboard/collaborator/page.tsx` | Overview — stats (pending/approved/rejected/total) |
+| `/dashboard/collaborator/submit` | `src/app/dashboard/collaborator/submit/page.tsx` | Submit course/event/news form |
+| `/dashboard/collaborator/submissions` | `src/app/dashboard/collaborator/submissions/page.tsx` | View own submissions with status badges |
 
-### Production
-```bash
-npm run build
-npm run start
-```
+Layout: `src/app/dashboard/collaborator/layout.tsx` — sidebar with 240px width.
 
-### Database Setup
-1. PostgreSQL database
-2. Run: `npx prisma generate`
-3. Seed data (if available)
-4. Configure environment variables
+### Admin Dashboard
 
-## Database Schema
+| Route | File | Description |
+|---|---|---|
+| `/dashboard/admin` | `src/app/dashboard/admin/page.tsx` | Review queue — approve/reject collaborator submissions |
+| `/dashboard/admin/courses` | `src/app/dashboard/admin/courses/page.tsx` | All courses — filter by status, unpublish/delete any |
+| `/dashboard/admin/events` | `src/app/dashboard/admin/events/page.tsx` | Events/news review — approve/reject teacher submissions |
+| `/dashboard/admin/accounts` | `src/app/dashboard/admin/accounts/page.tsx` | Account management — view/suspend/delete, create new accounts |
+| `/dashboard/admin/assistants` | `src/app/dashboard/admin/assistants/page.tsx` | Admin assistant management — create/suspend/delete, birthday mode toggle |
+| `/dashboard/admin/taxonomy` | `src/app/dashboard/admin/taxonomy/page.tsx` | Taxonomy CRUD — categories, subcategories, levels, grades, exam dates |
+| `/dashboard/admin/notifications` | `src/app/dashboard/admin/notifications/page.tsx` | Send notifications to any user, view sent history |
+| `/dashboard/admin/chat` | `src/app/dashboard/admin/chat/chat/page.tsx` | Chat threads — two-way with teachers/collaborators |
 
-Based on `02-data-model.md`:
+Layout: `src/app/dashboard/admin/layout.tsx` — sidebar with 256px width, grouped navigation.
 
-### Tables
-- `User` - Account types with roles
-- `Course` - Course details and publishing
-- `EventNews` - Events and news with approval
-- `CommunityCollaboratorSubmission` - Collaborator requests
-- `Notification` - Admin-to-user notifications
-- `ChatThread` - Support requests
-- Taxonomy tables (Category, Subcategory, Level, TargetGrade, TargetExamDate)
+### API Routes
 
-### Relationships
-- Teachers have courses and events
-- Community collaborators submit requests
-- Admins manage accounts and content
-- Notifications flow to teachers/collaborators
-- Support chat between users and admins
+| Endpoint | Methods | Auth | Description |
+|---|---|---|---|
+| `/api/auth/[...nextauth]` | GET, POST | — | NextAuth handler |
+| **Teacher** | | | |
+| `/api/teacher/profile` | GET, PATCH | teacher | Get/update own profile |
+| `/api/teacher/courses` | GET, POST, PATCH, DELETE | teacher | CRUD own courses |
+| `/api/teacher/events` | GET, POST, PATCH, DELETE | teacher | CRUD own events |
+| **Collaborator** | | | |
+| `/api/collaborator/submissions` | GET, POST | collaborator | List/create own submissions |
+| **Admin** | | | |
+| `/api/admin/users` | GET, POST | admin | List users / create account |
+| `/api/admin/users/[id]` | PATCH, DELETE | admin | Suspend/delete user |
+| `/api/admin/courses` | GET | admin, assistant | List all courses |
+| `/api/admin/courses/[id]` | PATCH, DELETE | admin, assistant | Unpublish/delete course |
+| `/api/admin/events` | GET | admin, assistant | List all events |
+| `/api/admin/events/[id]` | PATCH | admin, assistant | Approve/reject event |
+| `/api/admin/submissions` | GET | admin, assistant | List all submissions |
+| `/api/admin/submissions/[id]` | PATCH | admin, assistant | Approve/reject submission |
+| `/api/admin/assistants` | GET, POST | admin | List/create admin assistants |
+| `/api/admin/assistants/[id]` | PATCH, DELETE | admin | Manage assistant accounts |
+| `/api/admin/notifications` | GET, POST | authed | List/send notifications |
+| `/api/admin/chat` | GET | admin, assistant | List chat threads |
+| `/api/admin/chat/[id]` | POST, PATCH | admin, assistant | Send message / resolve thread |
+| `/api/admin/taxonomy/categories` | GET, POST | admin | List/create categories |
+| `/api/admin/taxonomy/categories/[id]` | DELETE | admin | Delete category |
+| `/api/admin/taxonomy/subcategories` | POST | admin | Create subcategory |
+| `/api/admin/taxonomy/subcategories/[id]` | DELETE | admin | Delete subcategory |
+| `/api/admin/taxonomy/levels` | GET, POST | admin | List/create levels |
+| `/api/admin/taxonomy/levels/[id]` | DELETE | admin | Delete level |
+| `/api/admin/taxonomy/grades` | GET, POST | admin | List/create target grades |
+| `/api/admin/taxonomy/grades/[id]` | DELETE | admin | Delete target grade |
+| `/api/admin/taxonomy/exam-dates` | GET, POST | admin | List/create exam dates |
+| `/api/admin/taxonomy/exam-dates/[id]` | DELETE | admin | Delete exam date |
 
-## Workflow (from 04-workflows.md)
+## Data Model
+
+14 tables defined in `prisma/schema.prisma`:
+
+| Model | Purpose |
+|---|---|
+| `User` | All accounts — teachers, collaborators, admins, admin assistants |
+| `Course` | Courses with status lifecycle (draft → published → unpublished → removed) |
+| `EventNews` | Events and news items with approval workflow |
+| `CommunityCollaboratorSubmission` | Collaborator content submissions (pending → approved/rejected) |
+| `Category` | Top-level categories (SAT, ACT, Other) |
+| `Subcategory` | Subjects scoped to a category (Math, English/RW, etc.) |
+| `Level` | Course levels (Beginner, Intermediate, Advanced, Test-Prep) |
+| `TargetGrade` | Target grades (9, 10, 11, 12) |
+| `TargetExamDate` | Exam windows (August 2026 SAT, etc.) |
+| `Notification` | Admin-to-user messages with read/unread state |
+| `ChatThread` | Two-way chat between users and admin |
+| `AdminAssistantMessage` | Admin ↔ Admin Assistant 1:1 messaging |
+| `WatchWord` | Admin-managed watch-word list for monitoring |
+| `WatchWordHit` | Logged watch-word matches |
+
+## Workflows
 
 ### Course Lifecycle
 ```
-[Teacher creates course] → draft (not visible)
-→ published (teacher toggles)
-→ unpublished (admin/assistant)
-→ published (re-publish)
-→ removed (admin deletes)
+Teacher creates → draft (invisible)
+Teacher publishes → published (visible on site)
+Admin/assistant unpublishes → unpublished (hidden)
+Teacher/admin re-publishes → published
+Admin/assistant deletes → removed (permanent)
 ```
 
-### Event/News Lifecycle (Teacher)
+### Event/News Lifecycle
 ```
-[Teacher creates draft] → draft
-→ pending_review (teacher submits)
-→ published (admin/assistant approves)
-→ rejected (admin rejects, can resubmit)
-```
-
-### Community Collaborator Lifecycle
-```
-[Collaborator submits] → pending
-→ approved (content created/published)
-→ rejected (with reason)
+Teacher creates draft → draft
+Teacher submits for review → pending_review
+Admin/assistant approves → published
+Admin/assistant rejects → rejected (with reason, teacher notified)
 ```
 
-## Config Files
-
-### next.config.js
-```js
-module.exports = {
-  experimental: { serverActions: true },
-  images: { domains: ["localhost", "wijha.com", "supabase.co", "cloudinary.com"] }
-}
+### Collaborator Submission
+```
+Collaborator submits → pending
+Admin/assistant approves → approved (course/event created on platform)
+Admin/assistant rejects → rejected (with reason, collaborator notified)
 ```
 
-### tailwind.config.js
-```js
-tailwind.config = function ({ addBase }) {
-  addBase({
-    '*, ::before, ::after': { borderColor: 'currentColor' },
-    html: { fontFamily: 'sans-serif' },
-    body: { margin: '0', padding: '0' }
-  })
-}
+### Account Lifecycle
+```
+Admin/assistant creates → active
+Admin/assistant suspends → suspended (reason required, user notified)
+Admin/assistant lifts suspension → active
+Admin/assistant deletes → deleted (permanent)
 ```
 
-### package.json
-```json
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build", 
-    "start": "next start",
-    "lint": "next lint",
-    "db:generate": "prisma generate"
-  }
-}
+## Middleware
+
+Route protection in `src/middleware.ts`:
+
+| Route Pattern | Allowed Roles |
+|---|---|
+| `/dashboard/teacher/*` | `teacher` |
+| `/dashboard/admin/*` | `admin` |
+| `/dashboard/admin-assistant/*` | `admin`, `admin_assistant` |
+| `/dashboard/collaborator/*` | `community_collaborator` |
+| `/login` | Public |
+
+Unauthenticated users are redirected to `/login?callbackUrl=<original>`.
+
+## File Structure
+
+```
+wijha/
+├── prisma/
+│   └── schema.prisma           # 14 models
+├── scripts/
+│   └── seed.ts                 # Idempotent seed (safe to re-run)
+├── src/
+│   ├── app/
+│   │   ├── globals.css          # Design tokens, fonts, component classes
+│   │   ├── layout.tsx           # Root layout (Providers, nav, footer)
+│   │   ├── page.tsx             # Homepage
+│   │   ├── login/page.tsx       # Login form
+│   │   ├── terms/page.tsx       # Terms of service
+│   │   ├── search/page.tsx      # Search with filters
+│   │   ├── category/            # Category + subcategory pages
+│   │   ├── teacher/             # Teacher profile
+│   │   ├── course/              # Course detail
+│   │   ├── event/               # Event/news detail
+│   │   ├── dashboard/
+│   │   │   ├── teacher/         # Teacher dashboard (4 pages)
+│   │   │   ├── collaborator/    # Collaborator dashboard (3 pages)
+│   │   │   └── admin/           # Admin dashboard (8 pages)
+│   │   └── api/
+│   │       ├── auth/            # NextAuth
+│   │       ├── teacher/         # Teacher APIs (3 routes)
+│   │       ├── collaborator/    # Collaborator APIs (1 route)
+│   │       └── admin/           # Admin APIs (14 route groups)
+│   ├── components/              # Shared client components
+│   ├── lib/
+│   │   ├── auth.ts              # NextAuth config
+│   │   └── prisma.ts            # Prisma client singleton
+│   └── middleware.ts            # Route protection
+├── .env                         # DATABASE_URL, AUTH_SECRET
+└── package.json
 ```
 
-## Git Structure
+## Design System
 
-### Commits
-- Initial commit: Project structure and core configuration
-- Phase 1 commits: Public site implementation
-- Phase 2 commits: Dashboard infrastructure
+### Component Classes (globals.css)
 
-### Files Tracked
-- `src/app/` - All pages and routing
-- `src/lib/` - Application utilities
-- `prisma/` - Database schema
-- Configuration files (next.config.js, package.json, etc.)
-- Documentation (README.md, PROGRESS.md)
+- `.btn-primary` — Blue CTA button
+- `.btn-whatsapp` — Green WhatsApp button
+- `.course-card` — Course listing card
+- `.teacher-card` — Teacher listing card
+- `.path-card` — Category/subcategory card with rotation
+- `.fact-panel` — Information panel
+- `.fact-grid` — Grid of facts
+- `.search-panel` — Search with filter panel
+- `.scroll-row` — Horizontal scrollable row
+- `.tag` / `.tag.sat` / `.tag.act` — Category tags
+- `.two-col` — Two-column layout (main + sidebar)
 
-## Testing & Verification
+### Responsive
 
-### Manual Testing
-1. Browse public site: `http://localhost:3000`
-2. Test all 8 public pages
-3. Verify WhatsApp links work
-4. Test teacher dashboard access
-5. Test admin functionality
-6. Check mobile responsiveness
+Single breakpoint at 880px. Below that, two-column layouts stack vertically.
 
-### Development Tools
-- `npm run lint` - Code linting
-- Browser dev tools for debugging
-- Network tab for API testing
-- Application insights for monitoring
+### Accessibility
 
-## Future Phases (from 05-build-phasing.md)
+- `prefers-reduced-motion` disables all animations
+- Semantic HTML with proper headings
+- Keyboard-navigable forms and buttons
+- WhatsApp links open in new tab with `rel="noopener noreferrer"`
 
-### Phase 3: Community Collaborator
-- Enhanced collaborator dashboard
-- Admin review queue optimization
+## Build
 
-### Phase 4: Full Admin Console  
-- Complete account management
-- Advanced content moderation
-- Analytics and reporting
-
-### Deferred Features
-- Payments on-platform (WhatsApp remains primary)
-- Reviews/ratings system
-- Full i18n infrastructure
-- Real-time notifications
-
-## Troubleshooting
-
-### Common Issues
-1. **Database connection error** - Ensure PostgreSQL is running and database exists
-2. **Prisma generation fails** - Check schema.prisma syntax
-3. **CORS errors** - Configure NextAuth origin settings
-4. **Build fails** - Check for circular imports in TypeScript
-
-### Development Commands
 ```bash
-# Re-generate Prisma client
-npx prisma generate
-
-# Fix Prisma schema syntax
-npx prisma format
-
-# Check schema validity
-npx prisma validate
-
-# Run linting
-npm run lint
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # ESLint check
+npx tsc --noEmit # TypeScript check
 ```
 
-## Deployment
+## Environment Variables
 
-### Vercel (Recommended)
-1. Connect GitHub repository
-2. Set environment variables in Vercel dashboard
-3. Configure database connection
-4. Deploy
+In `.env`:
 
-### Docker
-```dockerfile
-FROM node:18
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
+```
+DATABASE_URL=postgresql://...     # Neon/Postgres connection string
+AUTH_SECRET=...                   # NextAuth secret (generated with `openssl rand -base64 32`)
 ```
 
-## Support
+## Seeding
 
-For issues with the Wijha platform:
-1. Check technical spec in `plan/` folder
-2. Review `README.md` setup instructions
-3. Document issues in GitHub issues
-4. Check PROGRESS.md for development status
+The seed script (`scripts/seed.ts`) is **idempotent** — it uses upsert/skip logic and is safe to run multiple times. It creates:
 
----
+- 3 categories (SAT, ACT, Other) with 7 subcategories
+- 4 levels, 4 target grades, 4 exam dates
+- 4 teachers with profiles
+- 1 admin, 1 collaborator, 1 admin assistant
+- 7 courses, 4 events/news items
 
-**Status**: Production Ready ✓
-**Phases Complete**: 1 & 2  
-**Remaining**: Phases 3 & 4 infrastructure
-**Deployment**: GitHub ready, Vercel compatible
-**Testing**: Manual verification complete
+```bash
+npx tsx scripts/seed.ts
+```
