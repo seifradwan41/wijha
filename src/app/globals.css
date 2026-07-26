@@ -448,36 +448,34 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   .dashboard-sidebar {
     position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; top: auto !important;
     width: 100% !important; height: auto !important; z-index: 50 !important;
-    display: flex !important; align-items: center !important;
+    display: flex !important; align-items: center !important; flex-direction: row !important;
     padding: 6px 8px !important; gap: 2px !important;
     background: var(--ink-900) !important;
     border-top: 1px solid rgba(255,255,255,0.08) !important;
     overflow-x: auto !important; overflow-y: hidden !important;
     scrollbar-width: none !important;
-    flex-direction: row !important;
   }
   .dashboard-sidebar::-webkit-scrollbar { display: none; }
   .dashboard-sidebar > div:first-child,
   .dashboard-sidebar > div:nth-child(2) { display: none !important; }
   .dashboard-sidebar nav {
     display: flex !important; gap: 2px !important; padding: 0 !important; flex: 1 !important; overflow-x: auto !important;
-    scrollbar-width: none !important; flex-direction: row !important;
+    scrollbar-width: none !important; flex-direction: row !important; flex-wrap: nowrap !important;
   }
   .dashboard-sidebar nav::-webkit-scrollbar { display: none; }
-  .dashboard-sidebar nav > div { display: none !important; }
+  .dashboard-sidebar nav > div { display: contents !important; }
+  .dashboard-sidebar nav > div > div:first-child { display: none !important; }
   .dashboard-sidebar nav a {
-    flex: 0 0 auto !important; padding: 10px 12px !important; font-size: 11px !important; white-space: nowrap !important;
+    flex: 0 0 auto !important; padding: 10px 10px !important; font-size: 11px !important; white-space: nowrap !important;
     border-radius: 8px !important; text-align: center !important; min-width: 0 !important;
-    display: flex !important; flex-direction: column !important; align-items: center !important; gap: 3px !important;
   }
   .dashboard-sidebar nav a svg { display: none !important; }
   .dashboard-sidebar > div:last-child {
-    position: static !important; border: none !important; padding: 0 !important; width: auto !important; left: auto !important; right: auto !important;
+    position: static !important; border: none !important; padding: 0 0 0 4px !important; width: auto !important; left: auto !important; right: auto !important;
   }
   .dashboard-sidebar > div:last-child button {
-    flex: 0 0 auto !important; padding: 10px 12px !important; font-size: 11px !important; white-space: nowrap !important;
+    flex: 0 0 auto !important; padding: 10px 10px !important; font-size: 11px !important; white-space: nowrap !important;
     border-radius: 8px !important; border: none !important;
-    display: flex !important; flex-direction: column !important; align-items: center !important; gap: 3px !important;
   }
   .dashboard-main { margin-left: 0 !important; padding: 20px 16px 80px !important; }
 
@@ -532,8 +530,8 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   .breadcrumb { font-size: 11px; flex-wrap: wrap; }
 
   /* Dashboard on very small screens */
-  .dashboard-sidebar nav a { padding: 8px 8px !important; font-size: 10px !important; }
-  .dashboard-sidebar > div:last-child button { padding: 8px 8px !important; font-size: 10px !important; }
+  .dashboard-sidebar nav a { padding: 8px 6px !important; font-size: 10px !important; }
+  .dashboard-sidebar > div:last-child button { padding: 8px 6px !important; font-size: 10px !important; }
   .dashboard-main { padding: 16px 12px 80px !important; }
   .dashboard-stats { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
 
