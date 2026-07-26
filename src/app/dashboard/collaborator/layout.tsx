@@ -32,15 +32,15 @@ export default function CollaboratorDashboardLayout({ children }: { children: Re
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <TermsCheck />
       <DashboardTour steps={tourSteps} storageKey="tour_collaborator" />
-      <aside className="dashboard-sidebar" style={{ width: 240, background: 'var(--ink-900)', position: 'fixed', top: 0, left: 0, bottom: 0, overflowY: 'auto' }}>
-        <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <aside className="dashboard-sidebar">
+        <div className="sidebar-logo" style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ width: 24, height: 24, borderRadius: '50%', border: '1.5px solid var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: 'var(--blue)', fontFamily: 'IBM Plex Mono, monospace' }}>و</span>
             Wijha
           </a>
         </div>
 
-        <div style={{ padding: '20px 16px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+        <div className="sidebar-user" style={{ padding: '20px 16px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 14, color: '#fff', flexShrink: 0 }}>
               {initials}
@@ -52,19 +52,19 @@ export default function CollaboratorDashboardLayout({ children }: { children: Re
           </div>
         </div>
 
-        <nav style={{ padding: '12px 10px' }}>
+        <nav className="sidebar-nav">
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
-              <Link key={item.href} href={item.href} data-tour={item.tour} style={{ display: 'block', padding: '10px 12px', borderRadius: 10, fontSize: 14, textDecoration: 'none', marginBottom: 2, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
+              <Link key={item.href} href={item.href} data-tour={item.tour} className={`sidebar-link${active ? ' active' : ''}`}>
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <button data-tour="sign-out" onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
+        <div className="sidebar-footer">
+          <button data-tour="sign-out" onClick={() => signOut({ callbackUrl: '/' })} className="sidebar-signout">
             Sign out
           </button>
         </div>
