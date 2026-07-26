@@ -3,14 +3,23 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import TermsCheck from '@/components/TermsCheck';
+import DashboardTour, { TourStep } from '@/components/DashboardTour';
 
-const navItems = [
-  { href: '/dashboard/collaborator', label: 'Overview' },
-  { href: '/dashboard/collaborator/submit', label: 'Submit Content' },
-  { href: '/dashboard/collaborator/submissions', label: 'My Submissions' },
-  { href: '/dashboard/collaborator/notifications', label: 'Notifications' },
-  { href: '/dashboard/collaborator/chat', label: 'Chat' },
+const tourSteps: TourStep[] = [
+  { target: '[data-tour="overview"]', title: 'Overview', description: 'Your dashboard home. See your submission stats — pending, approved, and rejected counts.' },
+  { target: '[data-tour="submit"]', title: 'Submit Content', description: 'Submit courses, events, or news you\'ve found. Fill in the details and send for admin review.' },
+  { target: '[data-tour="submissions"]', title: 'My Submissions', description: 'Track all your past submissions and see their status. If rejected, you\'ll see the reason why.' },
+  { target: '[data-tour="chat"]', title: 'Chat', description: 'Message the admin team directly. Ask questions or report issues.' },
+  { target: '[data-tour="sign-out"]', title: 'Sign Out', description: 'Click here to securely sign out when you\'re done.' },
 ];
+
+  const navItems = [
+    { href: '/dashboard/collaborator', label: 'Overview', tour: 'overview' },
+    { href: '/dashboard/collaborator/submit', label: 'Submit Content', tour: 'submit' },
+    { href: '/dashboard/collaborator/submissions', label: 'My Submissions', tour: 'submissions' },
+    { href: '/dashboard/collaborator/notifications', label: 'Notifications' },
+    { href: '/dashboard/collaborator/chat', label: 'Chat', tour: 'chat' },
+  ];
 
 export default function CollaboratorDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -22,6 +31,7 @@ export default function CollaboratorDashboardLayout({ children }: { children: Re
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <TermsCheck />
+      <DashboardTour steps={tourSteps} storageKey="tour_collaborator" />
       <aside className="dashboard-sidebar" style={{ width: 240, background: 'var(--ink-900)', position: 'fixed', top: 0, left: 0, bottom: 0, overflowY: 'auto' }}>
         <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -46,7 +56,7 @@ export default function CollaboratorDashboardLayout({ children }: { children: Re
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
-              <Link key={item.href} href={item.href} style={{ display: 'block', padding: '10px 12px', borderRadius: 10, fontSize: 14, textDecoration: 'none', marginBottom: 2, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
+              <Link key={item.href} href={item.href} data-tour={item.tour} style={{ display: 'block', padding: '10px 12px', borderRadius: 10, fontSize: 14, textDecoration: 'none', marginBottom: 2, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
                 {item.label}
               </Link>
             );
@@ -54,7 +64,7 @@ export default function CollaboratorDashboardLayout({ children }: { children: Re
         </nav>
 
         <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <button onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
+          <button data-tour="sign-out" onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
             Sign out
           </button>
         </div>

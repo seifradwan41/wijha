@@ -4,6 +4,24 @@ import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import HeartbeatPing from '@/components/HeartbeatPing';
 import TermsCheck from '@/components/TermsCheck';
+import DashboardTour, { TourStep } from '@/components/DashboardTour';
+
+const adminTourSteps: TourStep[] = [
+  { target: '[data-tour="review-queue"]', title: 'Review Queue', description: 'This is where you approve or reject submissions from community collaborators. Check new content here daily.' },
+  { target: '[data-tour="accounts"]', title: 'Accounts', description: 'Manage all user accounts. Create new teachers, assistants, or collaborators. Suspend or change passwords here.' },
+  { target: '[data-tour="teacher-manager"]', title: 'Teacher Manager', description: 'Manage any teacher\'s courses and events on their behalf. Create, edit, or publish content for them.' },
+  { target: '[data-tour="user-chat"]', title: 'User Chat', description: 'Chat directly with teachers and collaborators. Respond to their questions and requests.' },
+  { target: '[data-tour="assistant-chat"]', title: 'Assistant Chat', description: 'Private chat with your admin assistants. Your private chat channel with the admin team.' },
+  { target: '[data-tour="sign-out"]', title: 'Sign Out', description: 'Click here to securely sign out when you\'re done.' },
+];
+
+const assistantTourSteps: TourStep[] = [
+  { target: '[data-tour="review-queue"]', title: 'Review Queue', description: 'Review pending submissions from collaborators. Approve good content or reject with a reason.' },
+  { target: '[data-tour="teacher-manager"]', title: 'Teacher Manager', description: 'Help teachers manage their courses and events. You can create and edit on their behalf.' },
+  { target: '[data-tour="user-chat"]', title: 'User Chat', description: 'Chat with teachers and collaborators to support them.' },
+  { target: '[data-tour="chat-admin"]', title: 'Chat with Admin', description: 'Your direct line to the admin. Ask questions or report issues here.' },
+  { target: '[data-tour="sign-out"]', title: 'Sign Out', description: 'Sign out when you\'re finished.' },
+];
 
 const adminSections = [
   { label: 'Moderation', items: [
@@ -56,12 +74,22 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
   const role = user?.role as string;
   const isAdmin = role === 'admin';
   const navSections = isAdmin ? adminSections : assistantSections;
+  const tourSteps = isAdmin ? adminTourSteps : assistantTourSteps;
   const initials = name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
+
+  const tourTargets: Record<string, string> = {
+    '/dashboard/admin': 'review-queue',
+    '/dashboard/admin/accounts': 'accounts',
+    '/dashboard/admin/teacher-manager': 'teacher-manager',
+    '/dashboard/admin/chat': 'user-chat',
+    '/dashboard/admin/assistant-chat': isAdmin ? 'assistant-chat' : 'chat-admin',
+  };
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <HeartbeatPing />
       <TermsCheck />
+      <DashboardTour steps={tourSteps} storageKey="tour_admin" />
       <aside className="dashboard-sidebar" style={{ width: 256, background: 'var(--ink-900)', position: 'fixed', top: 0, left: 0, bottom: 0, overflowY: 'auto' }}>
         <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -89,7 +117,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
               {section.items.map((item) => {
                 const active = pathname === item.href;
                 return (
-                  <Link key={item.href} href={item.href} style={{ display: 'block', padding: '8px 12px', borderRadius: 8, fontSize: 13, textDecoration: 'none', marginBottom: 1, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
+                  <Link key={item.href} href={item.href} data-tour={tourTargets[item.href]} style={{ display: 'block', padding: '8px 12px', borderRadius: 8, fontSize: 13, textDecoration: 'none', marginBottom: 1, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
                     {item.label}
                   </Link>
                 );
@@ -99,7 +127,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
         </nav>
 
         <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <button onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
+          <button data-tour="sign-out" onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
             Sign out
           </button>
         </div>
