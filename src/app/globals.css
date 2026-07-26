@@ -537,7 +537,7 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   .hero p { font-size: 16px; }
   .hero-ctas { flex-direction: column; gap: 12px; }
   .hero-ctas a { text-align: center; }
-  .btn-primary, .btn-ghost, .btn-whatsapp { width: 100%; text-align: center; }
+  .hero-ctas .btn-primary, .hero-ctas .btn-ghost, .hero-ctas .btn-whatsapp { width: 100%; text-align: center; }
   .path-card { min-height: 420px; padding: 28px 22px 24px; }
   .path-card h3 { font-size: 22px; }
   .section-head { margin-bottom: 40px; }
@@ -640,6 +640,10 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   /* Dashboard cards responsive */
   .dashboard-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
   .dashboard-quick-links { grid-template-columns: 1fr !important; }
+
+  /* Profile page responsive */
+  .profile-layout { grid-template-columns: 1fr !important; }
+  .profile-fields { grid-template-columns: 1fr !important; }
 
   /* Chat messages */
   .chat-messages { padding: 16px; }
