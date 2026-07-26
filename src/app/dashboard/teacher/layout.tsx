@@ -3,15 +3,25 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import TermsCheck from '@/components/TermsCheck';
+import DashboardTour, { TourStep } from '@/components/DashboardTour';
 
-const navItems = [
-  { href: '/dashboard/teacher', label: 'Overview' },
-  { href: '/dashboard/teacher/profile', label: 'My Profile' },
-  { href: '/dashboard/teacher/courses', label: 'Courses' },
-  { href: '/dashboard/teacher/events', label: 'Events & News' },
-  { href: '/dashboard/teacher/notifications', label: 'Notifications' },
-  { href: '/dashboard/teacher/chat', label: 'Chat' },
+const tourSteps: TourStep[] = [
+  { target: '[data-tour="overview"]', title: 'Overview', description: 'Your dashboard home. See your course stats, published content, and pending reviews at a glance.' },
+  { target: '[data-tour="profile"]', title: 'My Profile', description: 'Set up your public profile. Add your name, bio, teaching style, specialties, and upload photos.' },
+  { target: '[data-tour="courses"]', title: 'Courses', description: 'Create and manage your courses. Choose category (SAT/ACT/Other), set schedule, price, and target grades.' },
+  { target: '[data-tour="events"]', title: 'Events & News', description: 'Post events and news for students. Add a photo and WhatsApp link, then submit for admin review.' },
+  { target: '[data-tour="chat"]', title: 'Chat', description: 'Message the admin team directly. Ask questions or report issues.' },
+  { target: '[data-tour="sign-out"]', title: 'Sign Out', description: 'Click here to securely sign out when you\'re done.' },
 ];
+
+  const navItems = [
+    { href: '/dashboard/teacher', label: 'Overview', tour: 'overview' },
+    { href: '/dashboard/teacher/profile', label: 'My Profile', tour: 'profile' },
+    { href: '/dashboard/teacher/courses', label: 'Courses', tour: 'courses' },
+    { href: '/dashboard/teacher/events', label: 'Events & News', tour: 'events' },
+    { href: '/dashboard/teacher/notifications', label: 'Notifications' },
+    { href: '/dashboard/teacher/chat', label: 'Chat', tour: 'chat' },
+  ];
 
 export default function TeacherDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -23,6 +33,7 @@ export default function TeacherDashboardLayout({ children }: { children: React.R
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <TermsCheck />
+      <DashboardTour steps={tourSteps} storageKey="tour_teacher" />
       <aside className="dashboard-sidebar" style={{ width: 240, background: 'var(--ink-900)', position: 'fixed', top: 0, left: 0, bottom: 0, overflowY: 'auto' }}>
         <div style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -47,7 +58,7 @@ export default function TeacherDashboardLayout({ children }: { children: React.R
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
-              <Link key={item.href} href={item.href} style={{ display: 'block', padding: '10px 12px', borderRadius: 10, fontSize: 14, textDecoration: 'none', marginBottom: 2, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
+              <Link key={item.href} href={item.href} data-tour={item.tour} style={{ display: 'block', padding: '10px 12px', borderRadius: 10, fontSize: 14, textDecoration: 'none', marginBottom: 2, color: active ? '#fff' : 'var(--text-on-ink-mute)', background: active ? 'rgba(47,111,237,0.2)' : 'transparent' }}>
                 {item.label}
               </Link>
             );
@@ -55,7 +66,7 @@ export default function TeacherDashboardLayout({ children }: { children: React.R
         </nav>
 
         <div style={{ padding: '12px 10px', borderTop: '1px solid rgba(255,255,255,0.06)', position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-          <button onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
+          <button data-tour="sign-out" onClick={() => signOut({ callbackUrl: '/' })} style={{ width: '100%', padding: '10px 12px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', color: 'var(--text-on-ink-mute)', fontSize: 13, cursor: 'pointer' }}>
             Sign out
           </button>
         </div>
