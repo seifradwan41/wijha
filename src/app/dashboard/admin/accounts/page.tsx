@@ -47,6 +47,7 @@ export default function AccountsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Permanently delete this account?')) return;
+    setUsers(prev => prev.filter(u => u.id !== id));
     await fetch('/api/admin/users/' + id, { method: 'DELETE' });
     load();
   };
