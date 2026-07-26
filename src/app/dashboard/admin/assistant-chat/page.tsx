@@ -30,10 +30,8 @@ export default function AssistantChatPage() {
 
   useEffect(() => {
     load();
-    if (isAdmin) {
-      fetch('/api/admin/assistants').then(r => r.json()).then((data: User[] | {error:string}) => { if (Array.isArray(data)) setAssistants(data); });
-    }
-  }, [isAdmin]);
+    fetch('/api/admin/assistants').then(r => r.json()).then((data: User[] | {error:string}) => { if (Array.isArray(data)) setAssistants(data); });
+  }, []);
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
