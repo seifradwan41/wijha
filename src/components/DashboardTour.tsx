@@ -63,10 +63,9 @@ export default function DashboardTour({ steps, storageKey }: Props) {
   const restart = () => { localStorage.removeItem(fullKey); setStepIdx(0); setActive(true); };
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).__restartTour = restart;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return () => { delete (window as any).__restartTour; };
+    const w = window as unknown as Record<string, unknown>;
+    w.__restartTour = restart;
+    return () => { delete (w as Record<string, unknown>).__restartTour; };
   });
 
   if (!active || stepIdx >= steps.length) return null;
