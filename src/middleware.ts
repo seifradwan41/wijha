@@ -61,6 +61,18 @@ export default auth(async (req) => {
     }
   }
 
+  if (pathname === '/dashboard' && session) {
+    const userRole = (session.user as Record<string, unknown>)?.role as string;
+    const dashboardMap: Record<string, string> = {
+      teacher: '/dashboard/teacher',
+      admin: '/dashboard/admin',
+      admin_assistant: '/dashboard/admin',
+      community_collaborator: '/dashboard/collaborator',
+    };
+    const target = dashboardMap[userRole];
+    if (target) return NextResponse.redirect(new URL(target, req.url));
+  }
+
   return NextResponse.next();
 });
 
