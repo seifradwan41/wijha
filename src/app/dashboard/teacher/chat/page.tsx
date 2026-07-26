@@ -40,10 +40,18 @@ export default function TeacherChatPage() {
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Chat</h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 24 }}>Start a conversation with the admin team.</p>
+      <div className="dash-page-header">
+        <div>
+          <h1>Chat</h1>
+          <div className="dash-header-sub">Start a conversation with the admin team.</div>
+        </div>
+      </div>
 
-      <div className="chat-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 220px)' }}>
+      <div style={{ background: 'rgba(47,111,237,0.08)', border: '1px solid rgba(47,111,237,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: 'var(--ink-700)', lineHeight: 1.6 }}>
+        <strong>🔵 Beta Notice:</strong> Wijha is still in beta. If you face any issues or have suggestions, please reach out here — we&apos;re listening!
+      </div>
+
+      <div className="chat-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 280px)' }}>
         {/* Thread list */}
         <div className="chat-sidebar" style={{ width: 320, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--ink-100)' }}>
@@ -69,7 +77,7 @@ export default function TeacherChatPage() {
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 32 }}>
               <p style={{ color: 'var(--ink-500)', fontSize: 14 }}>Start a new conversation or select an existing one.</p>
-              <textarea value={newThread} onChange={e => setNewThread(e.target.value)} placeholder="What's on your mind?" style={{ width: '100%', maxWidth: 480, minHeight: 100, padding: 12, borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, outline: 'none', resize: 'vertical', fontFamily: 'Inter, sans-serif' }} />
+              <textarea value={newThread} onChange={e => setNewThread(e.target.value)} placeholder="What's on your mind?" className="dash-input" style={{ width: '100%', maxWidth: 480, minHeight: 100, padding: 12, borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, outline: 'none', resize: 'vertical', fontFamily: 'Inter, sans-serif', background: 'var(--paper)', transition: 'border-color 0.2s' }} />
               <button onClick={handleNewThread} disabled={!newThread.trim()} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: newThread.trim() ? 'var(--blue)' : 'var(--ink-200)', color: '#fff', fontWeight: 600, fontSize: 14, cursor: newThread.trim() ? 'pointer' : 'not-allowed' }}>Send Message</button>
             </div>
           ) : (
@@ -89,7 +97,7 @@ export default function TeacherChatPage() {
               </div>
               {selectedThread?.status === 'open' && (
                 <div style={{ padding: '14px 20px', borderTop: '1px solid var(--ink-100)', display: 'flex', gap: 10 }}>
-                  <input value={newMessage} onChange={e => setNewMessage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} placeholder="Type a message..." style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, outline: 'none' }} />
+                  <input value={newMessage} onChange={e => setNewMessage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} placeholder="Type a message..." className="dash-input" style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, outline: 'none', background: 'var(--paper)', transition: 'border-color 0.2s' }} />
                   <button onClick={handleSend} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send</button>
                 </div>
               )}

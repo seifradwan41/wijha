@@ -130,6 +130,13 @@ export default function OnboardingPage() {
             <div style={{ background: 'var(--paper)', borderRadius: 10, padding: 16, maxHeight: 280, overflow: 'auto', fontSize: 14, lineHeight: 1.7, color: 'var(--ink-700)', marginBottom: 16, whiteSpace: 'pre-wrap' }}>
               {termsContent || 'No terms content available. You may proceed.'}
             </div>
+
+            <div style={{ background: 'rgba(47,111,237,0.08)', border: '1px solid rgba(47,111,237,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 16, fontSize: 13, color: 'var(--ink-700)', lineHeight: 1.6 }}>
+              <strong>🔵 Beta Notice:</strong> Wijha is still in beta.{' '}
+              {role === 'admin_assistant'
+                ? 'If you face any issues or have suggestions, please contact the admin directly.'
+                : 'If you face any issues or have suggestions, please reach out via the Chat on your dashboard.'}
+            </div>
             <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, cursor: 'pointer', marginBottom: 20 }}>
               <input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} style={{ width: 18, height: 18 }} />
               I have read and accept the terms & conditions
