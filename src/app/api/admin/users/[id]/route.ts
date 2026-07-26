@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { withRateLimit } from '@/lib/rate-limit';
+import bcrypt from 'bcryptjs';
 
 export const PATCH = withRateLimit(async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,6 +12,13 @@ export const PATCH = withRateLimit(async function PATCH(req: Request, { params }
   if (role !== 'admin' && role !== 'admin_assistant') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const body = await req.json();
+
+  if (body.password) {
+    const hashed = await bcrypt.hash(body.password, 10);
+    await prisma.user.update({ where: { id }, data: { password: hashed, passwordIsTemporary: false } });
+    return NextResponse.json({ ok: true });
+  }
+
   const user = await prisma.user.update({ where: { id }, data: { status: body.status, suspendedReason: body.suspendedReason || null } });
 
   if (body.status === 'suspended' && body.suspendedReason) {
@@ -33,7 +41,9 @@ export const DELETE = withRateLimit(async function DELETE(req: Request, { params
   const role = (session.user as Record<string, unknown>)?.role as string;
   if (role !== 'admin' && role !== 'admin_assistant') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  // Assistants can only delete teachers and collaborators
+  const myId = (session.user as Record<string, unknown>)?.userId as string;
+  if (id === myId) return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
+
   if (role === 'admin_assistant') {
     const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
     if (!target || (target.role !== 'teacher' && target.role !== 'community_collaborator')) {
