@@ -43,13 +43,17 @@ export default function TaxonomyPage() {
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Taxonomy</h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 32 }}>Manage categories, subcategories, levels, target grades, and exam dates.</p>
+      <div className="dash-page-header">
+        <div>
+          <h1>Taxonomy</h1>
+          <div className="dash-header-sub">Manage categories, subcategories, levels, target grades, and exam dates.</div>
+        </div>
+      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
+      <div className="taxonomy-grid">
         {/* Categories */}
-        <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Categories</h2>
+        <div className="dash-card">
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Categories</h2>
           <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
             <input value={newCat} onChange={e => setNewCat(e.target.value)} placeholder="New category..." style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--ink-200)', fontSize: 14 }} />
             <button onClick={() => { if (newCat) { add('/api/admin/taxonomy/categories', { name: newCat }); setNewCat(''); } }} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Add</button>
@@ -82,8 +86,8 @@ export default function TaxonomyPage() {
         </div>
 
         {/* Levels */}
-        <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Levels</h2>
+        <div className="dash-card">
+          <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Levels</h2>
           <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
             <input value={newLevel} onChange={e => setNewLevel(e.target.value)} placeholder="New level..." style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--ink-200)', fontSize: 14 }} />
             <button onClick={() => { if (newLevel) { add('/api/admin/taxonomy/levels', { name: newLevel }); setNewLevel(''); } }} style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Add</button>

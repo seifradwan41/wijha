@@ -421,20 +421,22 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
 /* Mobile cards (hidden on desktop) */
 .mobile-cards { display: none !important; }
 
+/* Taxonomy grid */
+.taxonomy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
 /* ─── DASHBOARD DESIGN SYSTEM ─── */
-/* Mobile page header */
+/* Page header (applies on all sizes) */
 .dash-page-header {
-  background: var(--ink-900); padding: 16px 20px; margin: -20px -16px 20px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 28px;
 }
 .dash-page-header h1 {
-  font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
-  color: var(--text-on-ink); margin: 0; line-height: 1.2;
+  font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600;
+  color: var(--text-dark); margin: 0 0 4px; line-height: 1.2;
 }
 .dash-page-header .dash-header-sub {
-  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
-  color: var(--text-on-ink-mute); margin-top: 2px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  color: var(--text-mute);
 }
 
 /* Dashboard cards */
@@ -514,7 +516,7 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
 
 /* ─── RESPONSIVE ─── */
 @media (max-width: 880px) {
-  .paths, .mission, .filters, .results, .two-col, .fact-grid, .teacher-grid {
+  .paths, .mission, .filters, .results, .two-col, .fact-grid, .teacher-grid, .taxonomy-grid {
     grid-template-columns: 1fr;
   }
   .public-nav { padding: 16px 22px; }
@@ -600,14 +602,16 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
     flex: 0 0 auto !important; padding: 10px 10px !important; font-size: 11px !important;
     white-space: nowrap !important; border-radius: 8px !important; border: none !important;
   }
-  .dashboard-main { margin-left: 0 !important; padding: 0 16px 80px !important; }
+  .dashboard-main { margin-left: 0 !important; padding: 20px 16px 80px !important; }
 
   /* Dashboard mobile header */
   .dash-page-header {
-    padding: 14px 16px; margin: 0 -16px 16px; border-radius: 0;
+    background: var(--ink-900); padding: 14px 16px; margin: -20px -16px 16px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     position: sticky; top: 0; z-index: 40;
   }
-  .dash-page-header h1 { font-size: 16px; }
+  .dash-page-header h1 { font-size: 16px; color: var(--text-on-ink); }
+  .dash-page-header .dash-header-sub { font-size: 11px; color: var(--text-on-ink-mute); }
 
   /* Dashboard cards mobile */
   .dash-card { padding: 16px; border-radius: 14px; }
@@ -672,10 +676,14 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   .breadcrumb { font-size: 11px; flex-wrap: wrap; }
 
   /* Dashboard on very small screens */
-  .dashboard-sidebar nav a { padding: 8px 6px !important; font-size: 10px !important; }
-  .dashboard-sidebar > div:last-child button { padding: 8px 6px !important; font-size: 10px !important; }
+  .sidebar-link { padding: 8px 6px !important; font-size: 10px !important; }
+  .sidebar-signout { padding: 8px 6px !important; font-size: 10px !important; }
   .dashboard-main { padding: 16px 12px 80px !important; }
   .dashboard-stats { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  .dash-page-header { padding: 12px 12px; margin: -16px -12px 12px !important; }
+
+  /* very small screen table→cards: thinner padding */
+  .mobile-cards .dash-card { padding: 12px 14px; }
 
   /* Chat layout responsive */
   .chat-layout { flex-direction: column !important; height: auto !important; }

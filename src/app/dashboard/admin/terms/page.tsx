@@ -62,12 +62,12 @@ export default function TermsAdminPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <div className="dash-page-header">
         <div>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Terms & Conditions</h1>
-          <p style={{ color: 'var(--ink-500)', fontSize: 15 }}>Manage role-specific terms. Publishing a new version requires all users of that role to re-accept.</p>
+          <h1>Terms & Conditions</h1>
+          <div className="dash-header-sub">Manage role-specific terms. Publishing a new version requires all users of that role to re-accept.</div>
         </div>
-        <button onClick={() => setShowCreate(true)} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>+ New Version</button>
+        <button onClick={() => setShowCreate(true)} className="btn-primary" style={{ fontSize: 13, padding: '10px 18px', flexShrink: 0 }}>+ New Version</button>
       </div>
 
       {showCreate && (
@@ -107,27 +107,41 @@ export default function TermsAdminPage() {
       {versions.length === 0 ? (
         <p style={{ color: 'var(--ink-500)', fontSize: 14 }}>No terms versions published yet.</p>
       ) : (
-        <div style={{ background: '#fff', borderRadius: 14, overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+        <div className="admin-table-wrap" style={{ background: '#fff', borderRadius: 18, overflow: 'hidden', border: '1px solid rgba(27,31,42,0.07)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--ink-100)' }}>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--ink-500)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Role</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--ink-500)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Version</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--ink-500)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Published</th>
-                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--ink-500)', fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Acceptances</th>
+              <tr style={{ borderBottom: '1px solid rgba(27,31,42,0.07)' }}>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--text-mute)', fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Role</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--text-mute)', fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Version</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--text-mute)', fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Published</th>
+                <th style={{ textAlign: 'left', padding: '12px 16px', fontWeight: 600, color: 'var(--text-mute)', fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Acceptances</th>
               </tr>
             </thead>
             <tbody>
               {versions.map(v => (
-                <tr key={v.id} style={{ borderBottom: '1px solid var(--ink-100)' }}>
-                  <td style={{ padding: '12px 16px' }}><span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: 'var(--ink-100)', color: 'var(--ink-600)' }}>{roleLabels[v.roleScope] || v.roleScope}</span></td>
+                <tr key={v.id} style={{ borderBottom: '1px solid rgba(27,31,42,0.07)' }}>
+                  <td style={{ padding: '12px 16px' }}><span className="type-badge" style={{ textTransform: 'capitalize' }}>{roleLabels[v.roleScope] || v.roleScope}</span></td>
                   <td style={{ padding: '12px 16px', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>{v.versionNumber}</td>
-                  <td style={{ padding: '12px 16px', color: 'var(--ink-500)', fontSize: 13 }}>{new Date(v.publishedAt).toLocaleDateString()}</td>
-                  <td style={{ padding: '12px 16px' }}><span style={{ padding: '2px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: '#dcfce7', color: '#166534' }}>{v._count.acceptances}</span></td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-mute)', fontSize: 13 }}>{new Date(v.publishedAt).toLocaleDateString()}</td>
+                  <td style={{ padding: '12px 16px' }}><span className="status-pill" style={{ background: '#dcfce7', color: '#166534' }}>{v._count.acceptances}</span></td>
                 </tr>
               ))}
             </tbody>
           </table>
+
+          <div className="mobile-cards">
+            {versions.map(v => (
+              <div key={v.id} className="dash-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                  <div>
+                    <div className="dash-card-title">Version {v.versionNumber}</div>
+                    <div className="dash-card-meta">{roleLabels[v.roleScope] || v.roleScope} · Published {new Date(v.publishedAt).toLocaleDateString()}</div>
+                  </div>
+                  <span className="status-pill" style={{ background: '#dcfce7', color: '#166534' }}>{v._count.acceptances} acceptances</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
