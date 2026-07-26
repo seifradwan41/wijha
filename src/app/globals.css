@@ -418,6 +418,100 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   margin: 0 auto;
 }
 
+/* Mobile cards (hidden on desktop) */
+.mobile-cards { display: none !important; }
+
+/* ─── DASHBOARD DESIGN SYSTEM ─── */
+/* Mobile page header */
+.dash-page-header {
+  background: var(--ink-900); padding: 16px 20px; margin: -20px -16px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dash-page-header h1 {
+  font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
+  color: var(--text-on-ink); margin: 0; line-height: 1.2;
+}
+.dash-page-header .dash-header-sub {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  color: var(--text-on-ink-mute); margin-top: 2px;
+}
+
+/* Dashboard cards */
+.dash-card {
+  background: #fff; border-radius: 18px; padding: 18px 20px;
+  border: 1px solid rgba(27,31,42,0.07);
+  box-shadow: 0 2px 8px rgba(27,31,42,0.04);
+}
+.dash-card-title {
+  font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600;
+  color: var(--text-dark); margin: 0 0 4px;
+}
+.dash-card-meta {
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  color: var(--text-mute); line-height: 1.5;
+}
+.dash-card-actions {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+/* Status pills */
+.status-pill {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 100px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.03em;
+}
+.status-pill.published { background: rgba(22,101,52,0.12); color: #166534; }
+.status-pill.draft { background: rgba(55,48,163,0.1); color: #3730a3; }
+.status-pill.pending { background: rgba(234,179,8,0.15); color: #92400e; }
+.status-pill.approved { background: rgba(22,101,52,0.12); color: #166534; }
+.status-pill.rejected { background: rgba(239,68,68,0.1); color: #dc2626; }
+.status-pill.active { background: rgba(47,111,237,0.12); color: #2f5fb0; }
+.status-pill.suspended { background: rgba(239,68,68,0.1); color: #dc2626; }
+
+/* Type badges */
+.type-badge {
+  display: inline-flex; padding: 3px 8px; border-radius: 6px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.type-badge.sat { background: rgba(47,111,237,0.14); color: #2f5fb0; }
+.type-badge.act { background: rgba(46,125,140,0.14); color: #205a66; }
+.type-badge.other { background: rgba(91,127,166,0.14); color: #3e5a78; }
+.type-badge.course { background: rgba(47,111,237,0.14); color: #2f5fb0; }
+.type-badge.event { background: rgba(234,179,8,0.15); color: #92400e; }
+.type-badge.news { background: rgba(46,125,140,0.14); color: #205a66; }
+
+/* Filter pills */
+.filter-row {
+  display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto;
+  scrollbar-width: none; padding: 2px 0;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-pill {
+  padding: 7px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
+  border: 1px solid rgba(27,31,42,0.12); background: #fff;
+  color: var(--text-mute); cursor: pointer; white-space: nowrap;
+  font-family: 'Inter', sans-serif; transition: all 0.2s ease;
+}
+.filter-pill.active {
+  background: var(--ink-900); color: #fff; border-color: var(--ink-900);
+}
+
+/* Empty states */
+.dash-empty {
+  text-align: center; padding: 60px 24px; background: #fff;
+  border-radius: 18px; border: 1px solid rgba(27,31,42,0.07);
+}
+.dash-empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+.dash-empty h3 {
+  font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+  color: var(--text-dark); margin: 0 0 6px;
+}
+.dash-empty p {
+  font-size: 14px; color: var(--text-mute); margin: 0 0 20px;
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 880px) {
   .paths, .mission, .filters, .results, .two-col, .fact-grid, .teacher-grid {
@@ -492,6 +586,11 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
     flex: 0 0 auto !important; padding: 10px 10px !important; font-size: 11px !important;
     white-space: nowrap !important; border-radius: 8px !important; text-align: center !important; min-width: 0 !important;
     display: flex !important; align-items: center !important; justify-content: center !important;
+    flex-direction: column !important; gap: 3px !important;
+  }
+  .sidebar-link.active {
+    color: var(--blue-soft) !important; background: rgba(47,111,237,0.15) !important;
+    box-shadow: inset 0 -2px 0 var(--blue) !important;
   }
   .sidebar-footer {
     position: static !important; border: none !important; padding: 0 0 0 4px !important;
@@ -501,7 +600,26 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
     flex: 0 0 auto !important; padding: 10px 10px !important; font-size: 11px !important;
     white-space: nowrap !important; border-radius: 8px !important; border: none !important;
   }
-  .dashboard-main { margin-left: 0 !important; padding: 20px 16px 80px !important; }
+  .dashboard-main { margin-left: 0 !important; padding: 0 16px 80px !important; }
+
+  /* Dashboard mobile header */
+  .dash-page-header {
+    padding: 14px 16px; margin: 0 -16px 16px; border-radius: 0;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .dash-page-header h1 { font-size: 16px; }
+
+  /* Dashboard cards mobile */
+  .dash-card { padding: 16px; border-radius: 14px; }
+
+  /* Dashboard table → stacked cards on mobile */
+  .admin-table-wrap { overflow: visible !important; background: transparent !important; box-shadow: none !important; border-radius: 0 !important; }
+  .admin-table-wrap table { display: none !important; }
+  .admin-table-wrap .mobile-cards { display: flex !important; flex-direction: column; gap: 10px; }
+  .mobile-cards .dash-card { padding: 14px 16px; }
+  .mobile-cards .dash-card-title { font-size: 14px; }
+  .mobile-cards .dash-card-meta { font-size: 11px; }
+  .mobile-cards .dash-card-actions { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(27,31,42,0.06); }
 
   /* Forms responsive */
   form input, form select, form textarea {

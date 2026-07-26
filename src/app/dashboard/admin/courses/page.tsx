@@ -36,16 +36,20 @@ export default function AdminCoursesPage() {
 
   const filtered = filter === 'all' ? courses : courses.filter(c => c.status === filter);
 
-  if (loading) return <p style={{ color: 'var(--ink-500)' }}>Loading...</p>;
+  if (loading) return <p style={{ color: 'var(--text-mute)', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>Loading...</p>;
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>All Courses</h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 24 }}>View, unpublish, or delete any course across all teachers.</p>
+      <div className="dash-page-header">
+        <div>
+          <h1>All Courses</h1>
+          <div className="dash-header-sub">View, unpublish, or delete any course across all teachers.</div>
+        </div>
+      </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div className="filter-row">
         {['all', 'published', 'draft', 'unpublished'].map(s => (
-          <button key={s} onClick={() => setFilter(s)} style={{ padding: '6px 16px', borderRadius: 8, border: '1px solid var(--ink-200)', background: filter === s ? 'var(--ink-900)' : '#fff', color: filter === s ? '#fff' : 'var(--ink-600)', fontSize: 13, fontWeight: 500, cursor: 'pointer', textTransform: 'capitalize' }}>
+          <button key={s} onClick={() => setFilter(s)} className={`filter-pill${filter === s ? ' active' : ''}`}>
             {s} {s !== 'all' && `(${courses.filter(c => c.status === s).length})`}
           </button>
         ))}
@@ -53,26 +57,30 @@ export default function AdminCoursesPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {filtered.map(c => (
-          <div key={c.id} style={{ background: '#fff', borderRadius: 12, padding: '16px 20px', boxShadow: '0 1px 2px rgba(0,0,0,0.04)', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div key={c.id} className="dash-card" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 2 }}>{c.title}</div>
-              <div style={{ fontSize: 12, color: 'var(--ink-400)' }}>{c.teacher.name} · {c.category} · {c.subcategory} · {c.level}</div>
+              <div className="dash-card-title">{c.title}</div>
+              <div className="dash-card-meta">{c.teacher.name} · {c.category} · {c.subcategory} · {c.level}</div>
             </div>
-            <span style={{ padding: '3px 10px', borderRadius: 6, fontSize: 11, fontWeight: 600, background: c.status === 'published' ? '#dcfce7' : c.status === 'draft' ? '#e0e7ff' : '#fef3c7', color: c.status === 'published' ? '#166534' : c.status === 'draft' ? '#3730a3' : '#92400e', textTransform: 'capitalize' }}>
-              {c.status}
-            </span>
-            <div style={{ display: 'flex', gap: 6 }}>
-              <button onClick={() => setPreviewCourse(c)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--ink-200)', background: '#fff', color: 'var(--ink-600)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Preview</button>
-              {c.status === 'published' && (
-                <button onClick={() => handleStatus(c.id, 'unpublished')} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #f59e0b', background: '#fff', color: '#f59e0b', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Unpublish</button>
+            <span className={`status-pill ${c.status}`}>{c.status}</span>
+            <div className="dash-card-actions">
+              <button onClick={() => setPreviewCourse(c)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', color: 'var(--text-mute)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Preview</button>
+              {c.status === 'published' ? (
+                <button onClick={() => handleStatus(c.id, 'unpublished')} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #f59e0b', background: '#fff', color: '#f59e0b', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Unpublish</button>
+              ) : (
+                <button onClick={() => handleStatus(c.id, 'published')} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #10b981', background: '#fff', color: '#10b981', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Publish</button>
               )}
-              {c.status !== 'published' && (
-                <button onClick={() => handleStatus(c.id, 'published')} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #10b981', background: '#fff', color: '#10b981', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Publish</button>
-              )}
-              <button onClick={() => handleDelete(c.id)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Delete</button>
+              <button onClick={() => handleDelete(c.id)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Delete</button>
             </div>
           </div>
         ))}
+        {filtered.length === 0 && (
+          <div className="dash-empty">
+            <div className="dash-empty-icon">▦</div>
+            <h3>No courses found</h3>
+            <p>No courses match this filter.</p>
+          </div>
+        )}
       </div>
 
       <PreviewModal open={!!previewCourse} onClose={() => setPreviewCourse(null)} title={previewCourse?.title || ''}>
