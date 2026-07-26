@@ -62,29 +62,23 @@ export default function TeacherCoursesPage() {
     setCourses(courses.filter(c => c.id !== id));
   }
 
-  const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', boxSizing: 'border-box', background: '#fff' };
+  const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', boxSizing: 'border-box', background: 'var(--paper)' };
   const labelStyle: React.CSSProperties = { display: 'block', fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-mute)', marginBottom: 7 };
-
-  const statusConfig: Record<string, { bg: string; color: string; label: string }> = {
-    draft: { bg: 'rgba(234,179,8,0.1)', color: '#a16207', label: 'Draft' },
-    published: { bg: 'rgba(34,197,94,0.1)', color: '#16a34a', label: 'Published' },
-    unpublished: { bg: 'rgba(107,114,128,0.1)', color: '#4b5563', label: 'Unpublished' },
-  };
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+      <div className="dash-page-header">
         <div>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 28, fontWeight: 600, marginBottom: 6 }}>Courses</h1>
-          <p style={{ fontSize: 14, color: 'var(--text-mute)' }}>Create and manage your courses. Published courses appear on the public site.</p>
+          <h1>Courses</h1>
+          <div className="dash-header-sub">Create and manage your courses. Published courses appear on the public site.</div>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary" style={{ fontSize: 13 }}>
+        <button onClick={() => setShowForm(!showForm)} className="btn-primary" style={{ fontSize: 13, padding: '10px 18px', flexShrink: 0 }}>
           {showForm ? 'Cancel' : '+ New Course'}
         </button>
       </div>
 
       {showForm && (
-        <div style={{ background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.06)', padding: 28, marginBottom: 24 }}>
+        <div className="dash-card" style={{ marginBottom: 20 }}>
           <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, marginBottom: 20 }}>Create New Course</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
             <div style={{ gridColumn: '1 / -1' }}>
@@ -133,68 +127,41 @@ export default function TeacherCoursesPage() {
             <button onClick={handleCreate} disabled={saving || !form.title} className="btn-primary" style={{ fontSize: 13, opacity: saving || !form.title ? 0.6 : 1 }}>
               {saving ? 'Creating...' : 'Create as Draft'}
             </button>
-            <button onClick={() => setShowForm(false)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', fontSize: 13, cursor: 'pointer' }}>Cancel</button>
+            <button onClick={() => setShowForm(false)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancel</button>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div style={{ color: 'var(--text-mute)', textAlign: 'center', padding: 40 }}>Loading courses...</div>
+        <div style={{ color: 'var(--text-mute)', textAlign: 'center', padding: 40, fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>Loading courses...</div>
       ) : courses.length === 0 ? (
-        <div style={{ background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.06)', padding: 48, textAlign: 'center' }}>
-          <div style={{ fontSize: 36, marginBottom: 12 }}>▦</div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, marginBottom: 8 }}>No courses yet</h3>
-          <p style={{ fontSize: 14, color: 'var(--text-mute)', marginBottom: 20 }}>Create your first course to get started.</p>
+        <div className="dash-empty">
+          <div className="dash-empty-icon">▦</div>
+          <h3>No courses yet</h3>
+          <p>Create your first course to get started.</p>
           <button onClick={() => setShowForm(true)} className="btn-primary" style={{ fontSize: 13 }}>+ Create Course</button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {courses.map(c => {
-            const sc = statusConfig[c.status] || statusConfig.draft;
-            return (
-              <div key={c.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid rgba(27,31,42,0.06)', padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', transition: 'box-shadow 0.2s' }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                    <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 16, fontWeight: 600, margin: 0 }}>{c.title}</h3>
-                    <span className={`tag ${c.category.toLowerCase()}`} style={{ fontSize: 10 }}>{c.category}</span>
-                    <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, padding: '2px 8px', borderRadius: 100, background: sc.bg, color: sc.color, fontWeight: 500 }}>{sc.label}</span>
-                  </div>
-                  <p style={{ fontSize: 13, color: 'var(--text-mute)', margin: 0, display: 'flex', gap: 12 }}>
-                    <span>{c.subcategory}</span>
-                    <span>·</span>
-                    <span>{c.level}</span>
-                    <span>·</span>
-                    <span>{c.schedule || 'No schedule'}</span>
-                    {c.price && <><span>·</span><span style={{ fontWeight: 500 }}>${c.price}</span></>}
-                  </p>
+          {courses.map(c => (
+            <div key={c.id} className="dash-card" style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                  <span className="dash-card-title">{c.title}</span>
+                  <span className={`type-badge ${c.category.toLowerCase()}`}>{c.category}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 8, flexShrink: 0, marginLeft: 16 }}>
-                  <button
-                    onClick={() => setPreviewCourse(c)}
-                    style={{ padding: '7px 14px', borderRadius: 8, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer', color: 'var(--ink-700)' }}
-                  >
-                    Preview
-                  </button>
-                  <button
-                    onClick={() => toggleStatus(c.id, c.status)}
-                    style={{
-                      padding: '7px 16px', borderRadius: 8, border: 'none', fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                      background: c.status === 'published' ? 'rgba(234,179,8,0.1)' : 'var(--blue)',
-                      color: c.status === 'published' ? '#a16207' : '#fff',
-                    }}
-                  >
-                    {c.status === 'published' ? 'Unpublish' : 'Publish'}
-                  </button>
-                  <button
-                    onClick={() => deleteCourse(c.id)}
-                    style={{ padding: '7px 12px', borderRadius: 8, border: '1px solid rgba(239,68,68,0.2)', background: 'transparent', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}
-                  >
-                    Delete
-                  </button>
-                </div>
+                <div className="dash-card-meta">{c.subcategory} · {c.level} · {c.schedule || 'No schedule'}{c.price ? ` · $${c.price}` : ''}</div>
               </div>
-            );
-          })}
+              <span className={`status-pill ${c.status}`}>{c.status}</span>
+              <div className="dash-card-actions">
+                <button onClick={() => setPreviewCourse(c)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', color: 'var(--text-mute)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Preview</button>
+                <button onClick={() => toggleStatus(c.id, c.status)} style={{ padding: '5px 14px', borderRadius: 6, border: 'none', fontSize: 12, fontWeight: 500, cursor: 'pointer', background: c.status === 'published' ? 'rgba(234,179,8,0.12)' : 'var(--blue)', color: c.status === 'published' ? '#92400e' : '#fff' }}>
+                  {c.status === 'published' ? 'Unpublish' : 'Publish'}
+                </button>
+                <button onClick={() => deleteCourse(c.id)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.2)', background: 'transparent', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>Delete</button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
