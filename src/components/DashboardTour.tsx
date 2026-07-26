@@ -33,15 +33,25 @@ export default function DashboardTour({ steps, storageKey }: Props) {
     }
   }, [fullKey, userId]);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 880);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   const positionHighlight = useCallback(() => {
     if (!active || stepIdx >= steps.length) return;
+    if (isMobile) { setHighlight(null); return; }
     const sel = steps[stepIdx].target;
     const el = document.querySelector(sel) as HTMLElement | null;
     if (!el) { setHighlight(null); return; }
     const r = el.getBoundingClientRect();
     setHighlight({ top: r.top + window.scrollY, left: r.left + window.scrollX, width: r.width, height: r.height });
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [active, stepIdx, steps]);
+  }, [active, stepIdx, steps, isMobile]);
 
   useEffect(() => { positionHighlight(); }, [positionHighlight]);
 
@@ -74,7 +84,7 @@ export default function DashboardTour({ steps, storageKey }: Props) {
   const placement = step.placement || 'right';
 
   const getTooltipStyle = (): React.CSSProperties => {
-    if (!highlight) return { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 10001 };
+    if (isMobile || !highlight) return { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', zIndex: 10001, maxWidth: 320, width: '85vw' };
     const gap = 16;
     const base: React.CSSProperties = { position: 'absolute', zIndex: 10001, maxWidth: 320, width: 300 };
     switch (placement) {
