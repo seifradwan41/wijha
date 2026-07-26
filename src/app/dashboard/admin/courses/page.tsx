@@ -30,6 +30,7 @@ export default function AdminCoursesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Permanently delete this course?')) return;
+    setCourses(prev => prev.filter(c => c.id !== id));
     await fetch('/api/admin/courses/' + id, { method: 'DELETE' });
     load();
   };

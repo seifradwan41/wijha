@@ -74,8 +74,8 @@ export default function TeacherManagerPage() {
 
   async function deleteCourse(id: string) {
     if (!confirm('Delete this course?')) return;
-    await fetch('/api/admin/teacher-courses', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     setCourses(courses.filter(c => c.id !== id));
+    await fetch('/api/admin/teacher-courses', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
   }
 
   async function toggleEventStatus(id: string, current: string) {
@@ -86,8 +86,8 @@ export default function TeacherManagerPage() {
 
   async function deleteEvent(id: string) {
     if (!confirm('Delete this event?')) return;
-    await fetch('/api/admin/teacher-events', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     setEvents(events.filter(e => e.id !== id));
+    await fetch('/api/admin/teacher-events', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
   }
 
   const statusConfig: Record<string, { bg: string; color: string; label: string }> = {

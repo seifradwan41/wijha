@@ -34,7 +34,11 @@ export default function TaxonomyPage() {
     load();
   };
 
-  const remove = async (url: string) => {
+  const remove = async (url: string, type: 'category' | 'subcategory' | 'level' | 'grade' | 'examDate', id: string) => {
+    if (type === 'category') setCategories(prev => prev.filter(c => c.id !== id));
+    if (type === 'level') setLevels(prev => prev.filter(l => l.id !== id));
+    if (type === 'grade') setGrades(prev => prev.filter(g => g.id !== id));
+    if (type === 'examDate') setExamDates(prev => prev.filter(e => e.id !== id));
     await fetch(url, { method: 'DELETE' });
     load();
   };
@@ -62,13 +66,13 @@ export default function TaxonomyPage() {
             <div key={c.id} style={{ padding: '10px 0', borderBottom: '1px solid var(--ink-100)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontWeight: 500 }}>{c.name}</span>
-                <button onClick={() => remove(`/api/admin/taxonomy/categories/${c.id}`)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
+                <button onClick={() => remove(`/api/admin/taxonomy/categories/${c.id}`, 'category', c.id)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
               </div>
               <div style={{ marginTop: 8, paddingLeft: 16 }}>
                 {c.subcategories.map(s => (
                   <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0' }}>
                     <span style={{ fontSize: 13, color: 'var(--ink-500)' }}>{s.name}</span>
-                    <button onClick={() => remove(`/api/admin/taxonomy/subcategories/${s.id}`)} style={{ padding: '1px 6px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 10, cursor: 'pointer' }}>x</button>
+                    <button onClick={() => { setCategories(prev => prev.map(cat => cat.id === c.id ? { ...cat, subcategories: cat.subcategories.filter(sc => sc.id !== s.id) } : cat)); fetch(`/api/admin/taxonomy/subcategories/${s.id}`, { method: 'DELETE' }).then(load); }} style={{ padding: '1px 6px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 10, cursor: 'pointer' }}>x</button>
                   </div>
                 ))}
                 <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
@@ -95,7 +99,7 @@ export default function TaxonomyPage() {
           {levels.map(l => (
             <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--ink-100)' }}>
               <span style={{ fontSize: 14 }}>{l.name}</span>
-              <button onClick={() => remove(`/api/admin/taxonomy/levels/${l.id}`)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
+              <button onClick={() => remove(`/api/admin/taxonomy/levels/${l.id}`, 'level', l.id)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
             </div>
           ))}
 
@@ -108,7 +112,7 @@ export default function TaxonomyPage() {
             {grades.map(g => (
               <span key={g.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: 'var(--ink-100)', fontSize: 13 }}>
                 Grade {g.grade}
-                <button onClick={() => remove(`/api/admin/taxonomy/grades/${g.id}`)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 14, padding: 0 }}>&times;</button>
+                <button onClick={() => remove(`/api/admin/taxonomy/grades/${g.id}`, 'grade', g.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: 14, padding: 0 }}>&times;</button>
               </span>
             ))}
           </div>
@@ -122,7 +126,7 @@ export default function TaxonomyPage() {
             {examDates.map(e => (
               <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
                 <span style={{ fontSize: 14 }}>{e.name}</span>
-                <button onClick={() => remove(`/api/admin/taxonomy/exam-dates/${e.id}`)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
+                <button onClick={() => remove(`/api/admin/taxonomy/exam-dates/${e.id}`, 'examDate', e.id)} style={{ padding: '2px 8px', borderRadius: 4, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 11, cursor: 'pointer' }}>Remove</button>
               </div>
             ))}
           </div>
