@@ -104,6 +104,7 @@ export default function AssistantChatPage() {
   };
 
   const deleteWord = async (id: string) => {
+    setWatchWords(prev => prev.filter(w => w.id !== id));
     await fetch('/api/admin/watchwords', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) });
     loadWords();
   };

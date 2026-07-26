@@ -33,6 +33,7 @@ export default function AssistantsPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Permanently delete this assistant?')) return;
+    setAssistants(prev => prev.filter(a => a.id !== id));
     await fetch('/api/admin/assistants/' + id, { method: 'DELETE' });
     load();
   };
