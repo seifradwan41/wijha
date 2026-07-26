@@ -30,7 +30,7 @@ export default function PublicNav() {
           {session ? (
             <Link href={dashboardHref} className="cta">Dashboard</Link>
           ) : (
-            <Link href="/search" className="cta">Find a course</Link>
+            <><Link href="/login" style={{ color: 'var(--text-on-ink-mute)', textDecoration: 'none', fontSize: 14, letterSpacing: '0.03em' }}>Sign in</Link><Link href="/search" className="cta">Find a course</Link></>
           )}
         </div>
         <button className="nav-toggle" onClick={() => setMobileOpen(true)} aria-label="Open menu">
@@ -47,7 +47,7 @@ export default function PublicNav() {
           {session ? (
             <Link href={dashboardHref} onClick={() => setMobileOpen(false)}>Dashboard</Link>
           ) : (
-            <Link href="/search" onClick={() => setMobileOpen(false)} style={{ background: 'var(--blue)', padding: '12px 28px', borderRadius: 100 }}>Find a course</Link>
+            <><Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link><Link href="/search" onClick={() => setMobileOpen(false)} style={{ background: 'var(--blue)', padding: '12px 28px', borderRadius: 100 }}>Find a course</Link></>
           )}
         </div>
       )}

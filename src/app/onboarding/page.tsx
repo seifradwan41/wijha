@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 export default function OnboardingPage() {
   const { data: session, update } = useSession();
@@ -18,8 +18,8 @@ export default function OnboardingPage() {
   const userId = (session?.user as Record<string, unknown>)?.userId as string;
 
   useEffect(() => {
-    const initUsername = (session?.user as Record<string, unknown>)?.name as string || '';
-    setUsername(initUsername.toLowerCase().replace(/\s+/g, ''));
+    const existingUsername = (session?.user as Record<string, unknown>)?._username as string || '';
+    setUsername(existingUsername || ((session?.user as Record<string, unknown>)?.name as string || '').toLowerCase().replace(/\s+/g, ''));
 
     if (role) {
       fetch(`/api/terms/current?role=${role}`)
@@ -80,8 +80,8 @@ export default function OnboardingPage() {
     const dashboardPath = role === 'teacher' ? '/dashboard/teacher'
       : role === 'community_collaborator' ? '/dashboard/collaborator'
       : '/dashboard/admin';
-    await signOut({ redirect: false });
-    window.location.href = `/login?callbackUrl=${encodeURIComponent(dashboardPath)}`;
+    await update({ onboardingCompletedAt: new Date().toISOString() });
+    window.location.href = dashboardPath;
   };
 
   return (

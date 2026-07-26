@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function PendingTermsPage() {
@@ -62,8 +62,8 @@ export default function PendingTermsPage() {
       admin_assistant: '/dashboard/admin',
       community_collaborator: '/dashboard/collaborator',
     };
-    await signOut({ redirect: false });
-    window.location.href = `/login?callbackUrl=${encodeURIComponent(dashboardMap[role] || '/dashboard')}`;
+    await update({ onboardingCompletedAt: new Date().toISOString() });
+    window.location.href = dashboardMap[role] || '/dashboard';
   };
 
   if (loading) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}><p style={{ color: 'var(--ink-500)' }}>Loading...</p></div>;
