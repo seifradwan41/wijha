@@ -7,7 +7,7 @@ interface Message {
 }
 
 interface User { id: string; name: string }
-interface WatchWordHit { id: string; wordId: string; fullMessageText: string; detectedAt: string; adminAssistant: { id: string; name: string }; word: { id: string; word: string } }
+interface WatchWordHit { id: string; wordId: string; fullMessageText: string; timestamp: string; adminAssistant: { id: string; name: string }; word: { id: string; word: string } }
 
 export default function AssistantChatPage() {
   const { data: session } = useSession();
@@ -35,7 +35,12 @@ export default function AssistantChatPage() {
   };
 
   const loadWords = () => {
-    fetch('/api/admin/watchwords').then(r => r.json()).then((data: {words: {id:string;word:string;triggerCount:number}[]; hits: WatchWordHit[]}) => { setWatchWords(data.words); setWatchHits(data.hits); });
+    fetch('/api/admin/watchwords').then(r => r.json()).then((data: {id:string;word:string;triggerCount:number}[] | {error:string}) => {
+      if (Array.isArray(data)) setWatchWords(data);
+    });
+    fetch('/api/admin/watchwords/hits').then(r => r.json()).then((data: WatchWordHit[] | {error:string}) => {
+      if (Array.isArray(data)) setWatchHits(data);
+    });
   };
 
   useEffect(() => {
@@ -164,7 +169,7 @@ export default function AssistantChatPage() {
                   {watchHits.map(h => (
                     <div key={h.id} style={{ padding: '8px 0', borderBottom: '1px solid var(--ink-100)', fontSize: 13 }}>
                       <div style={{ fontWeight: 500, color: 'var(--ink-900)' }}>&quot;{h.word?.word}&quot; — {h.adminAssistant?.name}</div>
-                      <div style={{ color: 'var(--ink-400)', fontSize: 12 }}>{new Date(h.detectedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                      <div style={{ color: 'var(--ink-400)', fontSize: 12 }}>{new Date(h.timestamp).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
                       <div style={{ color: 'var(--ink-500)', fontSize: 12, marginTop: 4 }}>&quot;{h.fullMessageText.slice(0, 100)}&quot;</div>
                     </div>
                   ))}
