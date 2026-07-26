@@ -71,9 +71,9 @@ export default function AssistantChatPage() {
         {isAdmin ? 'Direct messages with your admin assistants.' : 'Send messages and files to the admin team.'}
       </p>
 
-      <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 200px)' }}>
+      <div className="chat-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 200px)' }}>
         {isAdmin && (
-          <div style={{ width: 280, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <div className="chat-sidebar" style={{ width: 280, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--ink-100)', fontWeight: 600, fontSize: 14 }}>Assistants</div>
             <div style={{ flex: 1, overflowY: 'auto' }}>
               {assistants.length === 0 ? (
@@ -92,7 +92,7 @@ export default function AssistantChatPage() {
           </div>
         )}
 
-        <div style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
+        <div className="chat-container" style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
           {isAdmin && !selectedAssistant ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-400)' }}>Select an assistant to start chatting</div>
           ) : (

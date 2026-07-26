@@ -63,9 +63,9 @@ export default function ChatPage() {
         <p style={{ color: 'var(--ink-500)', fontSize: 15 }}>Feature requests and questions from teachers and collaborators.</p>
       </div>
 
-      <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 200px)' }}>
+      <div className="chat-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 200px)' }}>
         {/* Thread list */}
-        <div style={{ width: 320, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="chat-sidebar" style={{ width: 320, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--ink-100)', fontWeight: 600, fontSize: 14 }}>Threads ({threads.length})</div>
           <div style={{ flex: 1, overflowY: 'auto' }}>
             {threads.length === 0 ? (
@@ -83,7 +83,7 @@ export default function ChatPage() {
         </div>
 
         {/* Chat area */}
-        <div style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
+        <div className="chat-container" style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-400)' }}>Select a thread to start chatting</div>
           ) : (
