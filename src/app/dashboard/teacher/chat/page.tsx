@@ -43,9 +43,9 @@ export default function TeacherChatPage() {
       <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Chat</h1>
       <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 24 }}>Start a conversation with the admin team.</p>
 
-      <div style={{ display: 'flex', gap: 20, height: 'calc(100vh - 220px)' }}>
+      <div className="chat-layout" style={{ display: 'flex', gap: 20, height: 'calc(100vh - 220px)' }}>
         {/* Thread list */}
-        <div style={{ width: 320, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="chat-sidebar" style={{ width: 320, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--ink-100)' }}>
             <button onClick={() => { setSelected(null); }} style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: 'none', background: !selected ? 'var(--blue)' : 'var(--ink-100)', color: !selected ? '#fff' : 'var(--ink-600)', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>+ New Conversation</button>
           </div>
@@ -65,7 +65,7 @@ export default function TeacherChatPage() {
         </div>
 
         {/* Chat area */}
-        <div style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
+        <div className="chat-container" style={{ flex: 1, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
           {!selected ? (
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 32 }}>
               <p style={{ color: 'var(--ink-500)', fontSize: 14 }}>Start a new conversation or select an existing one.</p>
