@@ -53,6 +53,23 @@ export default function AssistantChatPage() {
 
   useEffect(() => { messagesEnd.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
+  const lastLoggedRef = useRef<string>('');
+
+  useEffect(() => {
+    if (!isAdmin || !selectedAssistant || !newMessage.trim() || watchWords.length === 0) return;
+    const lower = newMessage.toLowerCase();
+    const matched = watchWords.filter(w => lower.includes(w.word.toLowerCase()));
+    if (matched.length === 0) return;
+    const key = matched.map(w => w.word).sort().join(',');
+    if (key === lastLoggedRef.current) return;
+    lastLoggedRef.current = key;
+    const timer = setTimeout(() => {
+      fetch('/api/admin/watchwords/hits', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: newMessage, assistantId: selectedAssistant }) });
+      loadWords();
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [newMessage, isAdmin, selectedAssistant, watchWords]);
+
   const handleSend = async () => {
     if ((!newMessage.trim() && !pendingImage)) return;
     const body: Record<string, unknown> = { text: newMessage, imageAttachment: pendingImage };
