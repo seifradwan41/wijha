@@ -1,0 +1,11 @@
+DELETE FROM "ChatMessage";
+DELETE FROM "ChatThread";
+DELETE FROM "AdminAssistantMessage";
+DELETE FROM "Notification";
+DELETE FROM "CommunityCollaboratorSubmission";
+DELETE FROM "TermsAcceptance";
+DELETE FROM "TermsVersion";
+DELETE FROM "Course";
+DELETE FROM "EventNews";
+DELETE FROM "User" WHERE "username" IN ('amrmustafa','sarahjohnson','michaelchen','aishaali','adminuser','laylahassan','omarassistant','mohamed');
+DELETE FROM "User" WHERE "username" NOT IN ('amr','sarah','michael','aisha','admin','assistant','layla');

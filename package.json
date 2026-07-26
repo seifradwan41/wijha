@@ -1,0 +1,40 @@
+{
+  "name": "wijha",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx scripts/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "next": "^15.5.22",
+    "next-auth": "^5.0.0-beta.32",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.12.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "jest": "^30.4.2",
+    "postcss": "^8.4.0",
+    "prisma": "^5.14.0",
+    "tailwindcss": "^3.4.0",
+    "ts-jest": "^29.4.12",
+    "tsx": "^4.11.0",
+    "typescript": "^5.4.0"
+  }
+}

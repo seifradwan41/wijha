@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  admin_assistant
+  teacher
+  community_collaborator
+}
+
+// ─── User (base account — internal users only) ───
+model User {
+  id                    String    @id @default(cuid())
+  role                  UserRole
+  name                  String
+  username              String    @unique @default("") // login identifier (no email format required)
+  contact               String?   // phone/WhatsApp, email (public-facing, not for login)
+  status                String    @default("active") // active | suspended | deleted
+  suspendedReason       String?
+  createdBy             String?   // admin/assistant id
+  password              String?   // hashed password for login
+  passwordIsTemporary   Boolean   @default(true)
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime  @default(now())
+
+  // Teacher profile fields (only used when role = teacher)
+  bannerPhoto     String?
+  avatarPhoto     String?
+  description     String?
+  teachingStyle   String?
+  specialties     String[]
+  categories      String[]
+  subcategories   String[]
+  whatsappContact String?
+  profileStatus   String   @default("draft") // draft | published
+
+  // Admin Assistant extra fields (from 07-admin-extras.md)
+  lastLoginAt       DateTime?
+  lastActiveAt      DateTime?
+  loginHistory      String[]  // array of ISO timestamps
+
+  // Relations
+  courses         Course[]
+  eventsNews      EventNews[]
+  notificationsReceived Notification[] @relation("NotificationRecipient")
+  notificationsSent    Notification[] @relation("NotificationSender")
+  submissions     CommunityCollaboratorSubmission[]
+  chatThreadsOpened  ChatThread[] @relation("ChatThreadOpener")
+  chatThreadsAssigned ChatThread[] @relation("ChatThreadAssignee")
+  adminMessagesSent     AdminAssistantMessage[] @relation("AdminMsgSender")
+  adminMessagesReceived AdminAssistantMessage[] @relation("AdminMsgRecipient")
+  termsAcceptances TermsAcceptance[]
+}
+
+// ─── Course ───
+model Course {
+  id                String   @id @default(cuid())
+  teacherId         String
+  title             String
+  description       String
+  category          String   // SAT / ACT / Other
+  subcategory       String   // Math / English-RW / Biology / etc.
+  level             String   // Beginner / Intermediate / Advanced / Test-Prep
+  targetGrades      String[] // ["9","10","11","12"]
+  targetExamDate    String?
+  schedule          String   // days + time + timezone
+  estimatedGroupSize Int?
+  startDate         DateTime?
+  sessionCount      Int?
+  price             Float?
+  contactForPrice   Boolean  @default(false)
+  status            String   @default("draft") // draft | published | unpublished | removed
+  createdBy         String?  // teacher_id or collaborator
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  teacher User @relation(fields: [teacherId], references: [id])
+}
+
+// ─── Event / News ───
+model EventNews {
+  id              String   @id @default(cuid())
+  type            String   // event | news
+  teacherId       String
+  photo           String?
+  title           String
+  description     String
+  relatedAction   String?  // "Register" link or "Join WhatsApp group" link
+  status          String   @default("draft") // draft | pending_review | published | rejected
+  rejectionReason String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  teacher User @relation(fields: [teacherId], references: [id])
+}
+
+// ─── Community Collaborator Submission (Request) ───
+model CommunityCollaboratorSubmission {
+  id              String   @id @default(cuid())
+  submittedBy     String
+  type            String   // course | event | news
+  payload         String   // JSON string of the submitted data
+  status          String   @default("pending") // pending | approved | rejected
+  reviewedBy      String?
+  rejectionReason String?
+  linkedTeacher   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  submitter User @relation(fields: [submittedBy], references: [id])
+}
+
+// ─── Taxonomy: Category ───
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  createdAt   DateTime @default(now())
+  subcategories Subcategory[]
+}
+
+// ─── Taxonomy: Subcategory ───
+model Subcategory {
+  id         String   @id @default(cuid())
+  name       String
+  categoryId String
+  createdAt  DateTime @default(now())
+
+  category Category @relation(fields: [categoryId], references: [id])
+}
+
+// ─── Taxonomy: Level ───
+model Level {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// ─── Taxonomy: Target Grade ───
+model TargetGrade {
+  id        String   @id @default(cuid())
+  grade     String   @unique
+  createdAt DateTime @default(now())
+}
+
+// ─── Taxonomy: Target Exam Date ───
+model TargetExamDate {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// ─── Notification ───
+model Notification {
+  id              String   @id @default(cuid())
+  recipientId     String
+  sentBy          String
+  message         String
+  relatedEntity   String?
+  relatedEntityId String?
+  read            Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  recipient User @relation("NotificationRecipient", fields: [recipientId], references: [id])
+  sender    User @relation("NotificationSender", fields: [sentBy], references: [id])
+}
+
+// ─── Chat / Feature Request Thread ───
+model ChatThread {
+  id          String   @id @default(cuid())
+  openedBy    String
+  assignedTo  String?
+  messages    String   @default("[]") // JSON array of {sender, text, timestamp}
+  status      String   @default("open") // open | resolved
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  opener   User  @relation("ChatThreadOpener", fields: [openedBy], references: [id])
+  assignee User? @relation("ChatThreadAssignee", fields: [assignedTo], references: [id])
+}
+
+// ─── Admin ↔ Admin Assistant Chat Message ───
+model AdminAssistantMessage {
+  id              String   @id @default(cuid())
+  senderId        String
+  recipientId     String
+  text            String?
+  linkedEntity    String?  // course_id or request_id
+  imageAttachment String?
+  timestamp       DateTime @default(now())
+  readStatus      Boolean  @default(false)
+
+  sender    User @relation("AdminMsgSender", fields: [senderId], references: [id])
+  recipient User @relation("AdminMsgRecipient", fields: [recipientId], references: [id])
+}
+
+// ─── Terms Version & Acceptance ───
+model TermsVersion {
+  id            String   @id @default(cuid())
+  roleScope     String
+  content       String
+  versionNumber String
+  publishedAt   DateTime @default(now())
+
+  acceptances TermsAcceptance[]
+}
+
+model TermsAcceptance {
+  id             String   @id @default(cuid())
+  userId         String
+  termsVersionId String
+  acceptedAt     DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  termsVersion TermsVersion @relation(fields: [termsVersionId], references: [id])
+
+  @@unique([userId, termsVersionId])
+}
