@@ -99,11 +99,15 @@ export default function TeacherManagerPage() {
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>Teacher Manager</h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 24 }}>Select a teacher to view and manage their courses, events, and news.</p>
+      <div className="dash-page-header">
+        <div>
+          <h1>Teacher Manager</h1>
+          <div className="dash-header-sub">Select a teacher to view and manage their courses, events, and news.</div>
+        </div>
+      </div>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 24, alignItems: 'center' }}>
-        <select value={selectedTeacher} onChange={e => setSelectedTeacher(e.target.value)} style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, minWidth: 240, background: '#fff' }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+        <select value={selectedTeacher} onChange={e => setSelectedTeacher(e.target.value)} style={{ padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, minWidth: 200, background: '#fff', flex: '1 1 auto', maxWidth: 300 }}>
           <option value="">Select a teacher...</option>
           {teachers.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
@@ -116,10 +120,10 @@ export default function TeacherManagerPage() {
       </div>
 
       {!selectedTeacher && (
-        <div style={{ background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.06)', padding: 60, textAlign: 'center' }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>👤</div>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, marginBottom: 8 }}>Select a teacher</h3>
-          <p style={{ fontSize: 14, color: 'var(--text-mute)' }}>Choose a teacher above to manage their content.</p>
+        <div className="dash-empty">
+          <div className="dash-empty-icon">👤</div>
+          <h3>Select a teacher</h3>
+          <p>Choose a teacher above to manage their content.</p>
         </div>
       )}
 
@@ -149,29 +153,29 @@ export default function TeacherManagerPage() {
             </div>
           )}
 
-          {loading ? <p style={{ color: 'var(--ink-400)' }}>Loading...</p> : (
+          {loading ? <p style={{ color: 'var(--text-mute)', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>Loading...</p> : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {courses.map(c => {
                 const sc = statusConfig[c.status] || statusConfig.draft;
                 return (
-                  <div key={c.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid rgba(27,31,42,0.06)', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                        <span style={{ fontFamily: 'Fraunces, serif', fontSize: 15, fontWeight: 600 }}>{c.title}</span>
-                        <span className={`tag ${c.category.toLowerCase()}`} style={{ fontSize: 10 }}>{c.category}</span>
-                        <span style={{ padding: '2px 8px', borderRadius: 100, fontSize: 10, fontWeight: 600, background: sc.bg, color: sc.color }}>{sc.label}</span>
+                  <div key={c.id} className="dash-card" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: 160 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                        <span className="dash-card-title">{c.title}</span>
+                        <span className={`type-badge ${c.category.toLowerCase()}`}>{c.category}</span>
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--ink-400)' }}>{c.subcategory} · {c.level} · {c.schedule || 'No schedule'}</div>
+                      <div className="dash-card-meta">{c.subcategory} · {c.level} · {c.schedule || 'No schedule'}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => setPreviewCourse(c)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid var(--ink-200)', background: '#fff', fontSize: 12, cursor: 'pointer' }}>Preview</button>
-                      <button onClick={() => toggleCourseStatus(c.id, c.status)} style={{ padding: '5px 12px', borderRadius: 6, border: 'none', background: c.status === 'published' ? 'rgba(234,179,8,0.1)' : 'var(--blue)', color: c.status === 'published' ? '#a16207' : '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{c.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+                    <span className={`status-pill ${c.status}`}>{sc.label}</span>
+                    <div className="dash-card-actions">
+                      <button onClick={() => setPreviewCourse(c)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', color: 'var(--text-mute)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Preview</button>
+                      <button onClick={() => toggleCourseStatus(c.id, c.status)} style={{ padding: '5px 12px', borderRadius: 6, border: 'none', background: c.status === 'published' ? 'rgba(234,179,8,0.12)' : 'var(--blue)', color: c.status === 'published' ? '#92400e' : '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{c.status === 'published' ? 'Unpublish' : 'Publish'}</button>
                       <button onClick={() => deleteCourse(c.id)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.2)', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>Delete</button>
                     </div>
                   </div>
                 );
               })}
-              {courses.length === 0 && <p style={{ color: 'var(--ink-400)', textAlign: 'center', padding: 30 }}>No courses yet.</p>}
+              {courses.length === 0 && <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: 30, fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>No courses yet.</p>}
             </div>
           )}
         </div>
@@ -203,30 +207,30 @@ export default function TeacherManagerPage() {
             </div>
           )}
 
-          {loading ? <p style={{ color: 'var(--ink-400)' }}>Loading...</p> : (
+          {loading ? <p style={{ color: 'var(--text-mute)', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>Loading...</p> : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {events.map(e => {
                 const sc = statusConfig[e.status] || statusConfig.draft;
                 return (
-                  <div key={e.id} style={{ background: '#fff', borderRadius: 14, border: '1px solid rgba(27,31,42,0.06)', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {e.photo && sanitizeCssUrl(e.photo) && <div style={{ width: 48, height: 48, borderRadius: 8, background: `url(${sanitizeCssUrl(e.photo)}) center/cover`, flexShrink: 0, marginRight: 14 }} />}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                        <span style={{ fontFamily: 'Fraunces, serif', fontSize: 15, fontWeight: 600 }}>{e.title}</span>
-                        <span className={`tag ${e.type === 'event' ? 'sat' : 'act'}`} style={{ fontSize: 10 }}>{e.type}</span>
-                        <span style={{ padding: '2px 8px', borderRadius: 100, fontSize: 10, fontWeight: 600, background: sc.bg, color: sc.color }}>{sc.label}</span>
+                  <div key={e.id} className="dash-card" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                    {e.photo && sanitizeCssUrl(e.photo) && <div style={{ width: 48, height: 48, borderRadius: 8, background: `url(${sanitizeCssUrl(e.photo)}) center/cover`, flexShrink: 0 }} />}
+                    <div style={{ flex: 1, minWidth: 160 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                        <span className="dash-card-title">{e.title}</span>
+                        <span className={`type-badge ${e.type === 'event' ? 'event' : 'news'}`}>{e.type}</span>
                       </div>
-                      <div style={{ fontSize: 12, color: 'var(--ink-400)' }}>{new Date(e.createdAt).toLocaleDateString()}</div>
+                      <div className="dash-card-meta">{new Date(e.createdAt).toLocaleDateString()}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => setPreviewEvent(e)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid var(--ink-200)', background: '#fff', fontSize: 12, cursor: 'pointer' }}>Preview</button>
-                      <button onClick={() => toggleEventStatus(e.id, e.status)} style={{ padding: '5px 12px', borderRadius: 6, border: 'none', background: e.status === 'published' ? 'rgba(234,179,8,0.1)' : 'var(--blue)', color: e.status === 'published' ? '#a16207' : '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{e.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+                    <span className={`status-pill ${e.status}`}>{sc.label}</span>
+                    <div className="dash-card-actions">
+                      <button onClick={() => setPreviewEvent(e)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(27,31,42,0.12)', background: '#fff', color: 'var(--text-mute)', fontSize: 12, cursor: 'pointer' }}>Preview</button>
+                      <button onClick={() => toggleEventStatus(e.id, e.status)} style={{ padding: '5px 12px', borderRadius: 6, border: 'none', background: e.status === 'published' ? 'rgba(234,179,8,0.12)' : 'var(--blue)', color: e.status === 'published' ? '#92400e' : '#fff', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{e.status === 'published' ? 'Unpublish' : 'Publish'}</button>
                       <button onClick={() => deleteEvent(e.id)} style={{ padding: '5px 12px', borderRadius: 6, border: '1px solid rgba(239,68,68,0.2)', background: '#fff', fontSize: 12, cursor: 'pointer', color: '#dc2626' }}>Delete</button>
                     </div>
                   </div>
                 );
               })}
-              {events.length === 0 && <p style={{ color: 'var(--ink-400)', textAlign: 'center', padding: 30 }}>No events or news yet.</p>}
+              {events.length === 0 && <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: 30, fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>No events or news yet.</p>}
             </div>
           )}
         </div>
