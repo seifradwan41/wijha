@@ -35,6 +35,9 @@ export const DELETE = withRateLimit(async function DELETE(req: Request) {
   if (role !== 'admin' && role !== 'admin_assistant') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const { id } = await req.json();
-  await prisma.watchWord.delete({ where: { id } });
+  try {
+    await prisma.watchWordHit.deleteMany({ where: { wordId: id } });
+    await prisma.watchWord.delete({ where: { id } });
+  } catch { return NextResponse.json({ error: 'Failed to delete' }, { status: 500 }); }
   return NextResponse.json({ ok: true });
 });
