@@ -444,26 +444,39 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
     background: transparent; border: none; color: var(--text-on-ink); font-size: 28px; cursor: pointer;
   }
 
-  /* Dashboard sidebar responsive */
+  /* Dashboard sidebar responsive — bottom tab bar */
   .dashboard-sidebar {
     position: fixed; bottom: 0; left: 0; right: 0; top: auto;
     width: 100%; height: auto; z-index: 50;
-    display: flex; overflow-x: auto; overflow-y: hidden;
-    padding: 8px 12px; gap: 4px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center;
+    padding: 6px 8px; gap: 2px;
+    background: var(--ink-900);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    overflow-x: auto; overflow-y: hidden;
+    scrollbar-width: none;
   }
-  .dashboard-sidebar .sidebar-section { display: none; }
+  .dashboard-sidebar::-webkit-scrollbar { display: none; }
+  .dashboard-sidebar > div:first-child,
+  .dashboard-sidebar > div:nth-child(2) { display: none !important; }
   .dashboard-sidebar nav {
-    display: flex; gap: 4px; padding: 0; flex: 1; overflow-x: auto;
+    display: flex; gap: 2px; padding: 0; flex: 1; overflow-x: auto;
+    scrollbar-width: none;
   }
-  .dashboard-sidebar nav > div { display: none; }
+  .dashboard-sidebar nav::-webkit-scrollbar { display: none; }
+  .dashboard-sidebar nav > div { display: none !important; }
   .dashboard-sidebar nav a {
-    flex: 0 0 auto; padding: 8px 14px; font-size: 12px; white-space: nowrap;
-    border-radius: 8px;
+    flex: 0 0 auto; padding: 10px 12px; font-size: 11px; white-space: nowrap;
+    border-radius: 8px; text-align: center; min-width: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
   }
-  .dashboard-sidebar .user-info { display: none; }
-  .dashboard-sidebar .sign-out-btn {
-    flex: 0 0 auto; padding: 8px 14px; font-size: 12px; white-space: nowrap;
+  .dashboard-sidebar nav a svg { display: none; }
+  .dashboard-sidebar > div:last-child {
+    position: static; border: none; padding: 0; width: auto; left: auto; right: auto;
+  }
+  .dashboard-sidebar > div:last-child button {
+    flex: 0 0 auto; padding: 10px 12px; font-size: 11px; white-space: nowrap;
+    border-radius: 8px; border: none !important;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
   }
   .dashboard-main { margin-left: 0 !important; padding: 20px 16px 80px !important; }
 
@@ -477,9 +490,29 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
 
   /* Tables responsive */
   .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+  .admin-table-wrap table { min-width: 600px; }
+
+  /* Dashboard cards responsive */
+  .dashboard-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  .dashboard-quick-links { grid-template-columns: 1fr !important; }
 
   /* Chat messages */
   .chat-messages { padding: 16px; }
+
+  /* Dashboard page headers */
+  .dashboard-header { flex-direction: column !important; gap: 12px !important; align-items: flex-start !important; }
+
+  /* Modal responsive */
+  .modal-content { width: 95vw !important; max-width: none !important; padding: 20px !important; }
+
+  /* Filter buttons responsive */
+  .filter-row { flex-wrap: wrap; gap: 6px !important; }
+  .filter-row button { font-size: 11px !important; padding: 5px 10px !important; }
+
+  /* Course/event cards */
+  .course-list-item { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+  .course-list-item > div { width: 100% !important; }
+  .course-list-actions { justify-content: flex-start !important; flex-wrap: wrap; }
 }
 
 @media (max-width: 480px) {
@@ -496,6 +529,17 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
   .search-panel { padding: 18px; border-radius: 18px; }
   .page-header h1 { font-size: 24px; }
   .breadcrumb { font-size: 11px; flex-wrap: wrap; }
+
+  /* Dashboard on very small screens */
+  .dashboard-sidebar nav a { padding: 8px 8px; font-size: 10px; }
+  .dashboard-sidebar > div:last-child button { padding: 8px 8px; font-size: 10px; }
+  .dashboard-main { padding: 16px 12px 80px !important; }
+  .dashboard-stats { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+
+  /* Chat layout responsive */
+  .chat-layout { flex-direction: column !important; height: auto !important; }
+  .chat-sidebar { width: 100% !important; max-height: 200px; }
+  .chat-container { min-height: 400px; }
 }
 
 /* ─── REDUCED MOTION ─── */
