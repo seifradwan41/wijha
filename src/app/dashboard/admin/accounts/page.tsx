@@ -10,6 +10,7 @@ interface User {
 export default function AccountsPage() {
   const { data: session } = useSession();
   const role = (session?.user as Record<string, unknown>)?.role as string;
+  const myId = (session?.user as Record<string, unknown>)?.userId as string;
   const isAdmin = role === 'admin';
 
   const [users, setUsers] = useState<User[]>([]);
@@ -19,6 +20,8 @@ export default function AccountsPage() {
   const [suspendReason, setSuspendReason] = useState('');
   const [createModal, setCreateModal] = useState(false);
   const [form, setForm] = useState({ name: '', username: '', password: '', role: 'teacher' });
+  const [pwModal, setPwModal] = useState<{ id: string; name: string } | null>(null);
+  const [newPw, setNewPw] = useState('');
 
   const load = () => {
     fetch('/api/admin/users').then(r => r.json()).then((data: User[]) => {
@@ -51,6 +54,12 @@ export default function AccountsPage() {
   const handleCreate = async () => {
     await fetch('/api/admin/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) });
     setCreateModal(false); setForm({ name: '', username: '', password: '', role: 'teacher' }); load();
+  };
+
+  const handleChangePassword = async () => {
+    if (!pwModal || !newPw) return;
+    await fetch('/api/admin/users/' + pwModal.id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: newPw }) });
+    setPwModal(null); setNewPw('');
   };
 
   const filtered = filter === 'all' ? users : users.filter(u => u.role === filter);
@@ -88,6 +97,20 @@ export default function AccountsPage() {
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 20 }}>
               <button onClick={() => setCreateModal(false)} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--ink-200)', background: '#fff', cursor: 'pointer', fontSize: 14 }}>Cancel</button>
               <button onClick={handleCreate} disabled={!form.name || !form.username || !form.password} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 14, opacity: (!form.name || !form.username || !form.password) ? 0.5 : 1 }}>Create</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pwModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+          <div style={{ background: '#fff', borderRadius: 16, padding: 28, width: 420, maxWidth: '90vw' }}>
+            <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, marginBottom: 12 }}>Change Password</h3>
+            <p style={{ fontSize: 13, color: 'var(--ink-500)', marginBottom: 12 }}>Set a new password for {pwModal.name}.</p>
+            <input type="password" value={newPw} onChange={e => setNewPw(e.target.value)} placeholder="New password" style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, boxSizing: 'border-box' }} />
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginTop: 16 }}>
+              <button onClick={() => { setPwModal(null); setNewPw(''); }} style={{ padding: '10px 20px', borderRadius: 10, border: '1px solid var(--ink-200)', background: '#fff', cursor: 'pointer', fontSize: 14 }}>Cancel</button>
+              <button onClick={handleChangePassword} disabled={!newPw} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, cursor: 'pointer', fontSize: 14, opacity: !newPw ? 0.5 : 1 }}>Save</button>
             </div>
           </div>
         </div>
@@ -144,7 +167,10 @@ export default function AccountsPage() {
                     ) : (
                       <button onClick={() => handleUnsuspend(u.id)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #10b981', background: '#fff', color: '#10b981', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Activate</button>
                     )}
-                    <button onClick={() => handleDelete(u.id)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Delete</button>
+                    <button onClick={() => setPwModal({ id: u.id, name: u.name })} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--blue)', background: '#fff', color: 'var(--blue)', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Password</button>
+                    {u.id !== myId && (
+                      <button onClick={() => handleDelete(u.id)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #ef4444', background: '#fff', color: '#ef4444', fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Delete</button>
+                    )}
                   </div>
                 </td>
               </tr>
