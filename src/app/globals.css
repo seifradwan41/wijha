@@ -421,6 +421,9 @@ footer .brand { justify-content: center; margin-bottom: 14px; }
 /* Mobile cards (hidden on desktop) */
 .mobile-cards { display: none !important; }
 
+/* Dashboard inputs */
+.dash-input:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(47,111,237,0.12); }
+
 /* Taxonomy grid */
 .taxonomy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 

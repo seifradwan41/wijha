@@ -144,12 +144,18 @@ export default function AssistantChatPage() {
 
   return (
     <div>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 26, fontWeight: 600, color: 'var(--ink-900)', marginBottom: 8 }}>
-        {isAdmin ? 'Assistant Chat' : 'Chat with Admin'}
-      </h1>
-      <p style={{ color: 'var(--ink-500)', fontSize: 15, marginBottom: 24 }}>
-        {isAdmin ? 'Direct messages with your admin assistants.' : 'Send messages and files to the admin team.'}
-      </p>
+      <div className="dash-page-header">
+        <div>
+          <h1>{isAdmin ? 'Assistant Chat' : 'Chat with Admin'}</h1>
+          <div className="dash-header-sub">{isAdmin ? 'Direct messages with your admin assistants.' : 'Send messages and files to the admin team.'}</div>
+        </div>
+      </div>
+
+      {!isAdmin && (
+        <div style={{ background: 'rgba(47,111,237,0.08)', border: '1px solid rgba(47,111,237,0.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 13, color: 'var(--ink-700)', lineHeight: 1.6 }}>
+          <strong>🔵 Beta Notice:</strong> Wijha is still in beta. If you face any issues or have suggestions, please contact the admin directly.
+        </div>
+      )}
 
       {isAdmin && (
         <div style={{ marginBottom: 24, padding: 20, background: '#fff', borderRadius: 14, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
@@ -257,7 +263,7 @@ export default function AssistantChatPage() {
                 <div style={{ display: 'flex', gap: 10 }}>
                   <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); e.target.value = ''; }} />
                   <button onClick={() => fileRef.current?.click()} style={{ padding: '10px 12px', borderRadius: 10, border: '1px solid var(--ink-200)', background: '#fff', fontSize: 16, cursor: 'pointer', flexShrink: 0 }} title="Attach image">&#128206;</button>
-                  <input value={newMessage} onChange={e => setNewMessage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} placeholder="Type a message..." style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14, outline: 'none' }} />
+                  <input value={newMessage} onChange={e => setNewMessage(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} placeholder="Type a message..." className="dash-input" style={{ flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, outline: 'none', background: 'var(--paper)', transition: 'border-color 0.2s' }} />
                   <button onClick={handleSend} style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: 'var(--blue)', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer' }}>Send</button>
                 </div>
               </div>
