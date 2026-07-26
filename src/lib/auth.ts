@@ -33,6 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: user.id,
           name: user.name,
+          username: user.username,
           role: user.role,
           status: user.status,
           onboardingCompletedAt: user.onboardingCompletedAt,
@@ -42,12 +43,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = (user as unknown as { role?: string }).role;
         token.userId = user.id;
         token.status = (user as unknown as { status?: string }).status;
+        token.username = (user as unknown as { username?: string }).username;
         token.onboardingCompletedAt = (user as unknown as { onboardingCompletedAt?: Date })?.onboardingCompletedAt?.toISOString() || null;
+      }
+      if (trigger === 'update') {
+        const s = session as Record<string, unknown> | undefined;
+        if (s?.onboardingCompletedAt) {
+          token.onboardingCompletedAt = s.onboardingCompletedAt as string;
+        }
       }
       return token;
     },
@@ -55,6 +63,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         (session.user as unknown as { role?: string }).role = token.role as string;
         (session.user as unknown as { userId?: string }).userId = token.userId as string;
+        (session.user as unknown as { _username?: string })._username = token.username as string;
         (session.user as unknown as { _suspended?: boolean })._suspended = token.status !== 'active';
         (session.user as unknown as { _onboardingCompleted?: boolean })._onboardingCompleted = !!token.onboardingCompletedAt;
       }
