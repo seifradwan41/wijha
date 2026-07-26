@@ -45,12 +45,12 @@ export default function TeacherEventsPage() {
 
   async function deleteEvent(id: string) {
     if (!confirm('Delete this item?')) return;
+    setEvents(events.filter(e => e.id !== id));
     await fetch('/api/teacher/events', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    setEvents(events.filter(e => e.id !== id));
   }
 
   const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', boxSizing: 'border-box', background: '#fff' };
