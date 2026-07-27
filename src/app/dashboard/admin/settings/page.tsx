@@ -123,14 +123,12 @@ export default function AdminSettingsPage() {
               Show a dismissible notice on mobile devices warning that the dashboard is best viewed on desktop. Users can dismiss it for 24 hours.
             </p>
           </div>
-          <label style={{ position: 'relative', display: 'inline-block', width: 44, height: 24, flexShrink: 0, marginTop: 2 }}>
-            <input type="checkbox" checked={mobileWarn} onChange={e => setMobileWarn(e.target.checked)}
-              style={{ opacity: 0, width: 0, height: 0 }} />
-            <span onClick={() => { setMwSaved(false); setMobileWarn(!mobileWarn); }}
-              style={{ position: 'absolute', cursor: 'pointer', inset: 0, borderRadius: 24, background: mobileWarn ? '#10b981' : '#d1d5db', transition: 'background 0.2s' }}>
+          <button onClick={() => { setMwSaved(false); setMobileWarn(!mobileWarn); }}
+            style={{ position: 'relative', display: 'inline-block', width: 44, height: 24, flexShrink: 0, marginTop: 2, padding: 0, border: 'none', background: 'none', cursor: 'pointer' }}>
+            <span style={{ display: 'block', width: '100%', height: '100%', borderRadius: 24, background: mobileWarn ? '#10b981' : '#d1d5db', transition: 'background 0.2s', position: 'relative' }}>
               <span style={{ position: 'absolute', top: 2, left: mobileWarn ? 22 : 2, width: 20, height: 20, borderRadius: '50%', background: '#fff', transition: 'left 0.2s' }} />
             </span>
-          </label>
+          </button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 14 }}>
           <button onClick={handleSaveMw} disabled={mwSaving} className="btn-primary" style={{ padding: '8px 24px' }}>{mwSaving ? 'Saving...' : 'Save'}</button>
