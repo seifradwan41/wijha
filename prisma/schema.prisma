@@ -44,6 +44,7 @@ model User {
   lastLoginAt       DateTime?
   lastActiveAt      DateTime?
   loginHistory      String[]  // array of ISO timestamps
+  orientationSeenAt  DateTime?
 
   // Relations
   courses         Course[]
