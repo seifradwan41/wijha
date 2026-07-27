@@ -2,6 +2,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { matchesSub } from '@/lib/subcategory-utils';
 
 interface Course {
   id: string; title: string; category: string; subcategory: string; level: string;
@@ -83,7 +84,7 @@ export default function SearchContent({ courses, teachers, categories, levels, e
     return teachers.filter(t => {
       if (q && !t.name.toLowerCase().includes(q) && !t.specialties.some(s => s.toLowerCase().includes(q))) return false;
       if (category && !t.categories.includes(category)) return false;
-      if (sub && !t.subcategories.includes(sub)) return false;
+      if (sub && !t.subcategories.some(s => matchesSub(s, sub))) return false;
       return true;
     });
   }, [teachers, teacherQuery, category, subject]);

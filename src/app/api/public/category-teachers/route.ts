@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { displaySub } from '@/lib/subcategory-utils';
 import { withRateLimit } from '@/lib/rate-limit';
 
 export const GET = withRateLimit(async function GET() {
@@ -26,7 +27,7 @@ export const GET = withRateLimit(async function GET() {
       if (!grouped[key].some(e => e.name === t.name)) {
         grouped[key].push({
           name: t.name,
-          subject: t.subcategories.join(' · ') || 'All levels',
+          subject: t.subcategories.map(displaySub).join(' · ') || 'All levels',
           color: categoryColors[rawKey] || 'var(--slate)',
           avatarPhoto: t.avatarPhoto,
         });

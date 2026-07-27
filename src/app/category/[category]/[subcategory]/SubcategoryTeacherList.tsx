@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { displaySub } from '@/lib/subcategory-utils';
 
 interface TeacherData {
   id: string;
@@ -49,7 +50,7 @@ function TeacherCard({ teacher, index }: { teacher: TeacherData; index: number }
             <p style={{ fontSize: 13, color: 'var(--text-mute)', marginTop: 4, lineHeight: 1.5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: expanded ? 'normal' : 'nowrap' }}>{teacher.description || 'No description available.'}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
               {teacher.subcategories.map((s) => (
-                <span key={s} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 100, background: c.tagBg, color: c.tagText, border: `1px solid ${c.tagBorder}` }}>{s}</span>
+                <span key={s} style={{ fontSize: 11, padding: '2px 8px', borderRadius: 100, background: c.tagBg, color: c.tagText, border: `1px solid ${c.tagBorder}` }}>{displaySub(s)}</span>
               ))}
             </div>
           </div>

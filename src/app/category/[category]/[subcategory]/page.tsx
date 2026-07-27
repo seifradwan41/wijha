@@ -20,7 +20,7 @@ export default async function SubcategoryPage({ params }: { params: Promise<{ ca
         status: 'active',
         profileStatus: 'published',
         categories: { has: category },
-        subcategories: { has: subcategory },
+        subcategories: { hasSome: [subcategory, `ACT::${subcategory}`, `SAT::${subcategory}`, `Other::${subcategory}`] },
       },
       include: {
         courses: {

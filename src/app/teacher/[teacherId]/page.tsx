@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { sanitizeCssUrl } from '@/lib/url-utils';
+import { displaySub } from '@/lib/subcategory-utils';
 
 export default async function TeacherProfilePage({ params }: { params: Promise<{ teacherId: string }> }) {
   const { teacherId } = await params;
@@ -73,7 +74,7 @@ export default async function TeacherProfilePage({ params }: { params: Promise<{
                   <h3 style={{ fontSize: 14, fontFamily: 'IBM Plex Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-mute)', margin: '0 0 8px' }}>Subcategories</h3>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {teacher.subcategories.map((s: string) => (
-                      <span key={s} className="mono" style={{ fontSize: 11, padding: '4px 10px', borderRadius: 100, background: 'var(--paper)', color: 'var(--text-mute)' }}>{s}</span>
+                      <span key={s} className="mono" style={{ fontSize: 11, padding: '4px 10px', borderRadius: 100, background: 'var(--paper)', color: 'var(--text-mute)' }}>{displaySub(s)}</span>
                     ))}
                   </div>
                 </div>
