@@ -21,7 +21,7 @@ export default function DashboardBanner() {
     fetch('/api/settings/mobile-warning')
       .then(r => r.json())
       .then(data => {
-        if (data.enabled && window.innerWidth < 768) {
+        if (data.enabled && window.innerWidth < 1024) {
           const key = 'dismissed_mobile_warning';
           const ts = localStorage.getItem(key);
           if (!ts || Date.now() - Number(ts) > 86400000) {
@@ -56,17 +56,53 @@ export default function DashboardBanner() {
     setDismissedBc(true);
   };
 
+  const toastTop = broadcast && !dismissedBc ? 88 : 16;
+
   return (
     <>
-      {/* Mobile warning — inline banner at top */}
+      <style jsx global>{`
+        @keyframes slideInRight {
+          from { transform: translateX(calc(100% + 40px)); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `}</style>
+
+      {/* Mobile warning — toast notification */}
       {mobileWarn && !dismissedWarn && (
-        <div style={{ background: '#fef3c7', borderBottom: '1px solid #fde68a', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, fontSize: 13, color: '#92400e', flexWrap: 'wrap' }}>
-          <span>For the best experience, open this dashboard on a desktop or laptop computer.</span>
-          <button onClick={dismissWarn} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#92400e', padding: '2px 6px', lineHeight: 1 }}>✕</button>
+        <div style={{
+          position: 'fixed',
+          top: toastTop,
+          right: 16,
+          zIndex: 9999,
+          maxWidth: 440,
+          width: 'calc(100% - 32px)',
+          background: '#fffbeb',
+          borderLeft: '4px solid #f59e0b',
+          borderRadius: 8,
+          boxShadow: '0 8px 30px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+          padding: '20px 24px',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 14,
+          fontFamily: 'Segoe UI, system-ui, -apple-system, sans-serif',
+          animation: 'slideInRight 0.3s ease-out',
+        }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#d97706', marginBottom: 6 }}>
+              Desktop Recommended
+            </div>
+            <div style={{ fontSize: 15, lineHeight: 1.6, color: '#92400e' }}>
+              This dashboard is best viewed on a desktop or laptop computer. Some features may not work well on mobile devices and tablets.
+            </div>
+          </div>
+          <button onClick={dismissWarn}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20, color: '#d97706', padding: 0, lineHeight: 1, flexShrink: 0 }}>
+            ✕
+          </button>
         </div>
       )}
 
-      {/* Broadcast — Windows-style toast notification */}
+      {/* Broadcast — toast notification */}
       {broadcast && !dismissedBc && (
         <div style={{
           position: 'fixed',
@@ -100,13 +136,6 @@ export default function DashboardBanner() {
           </button>
         </div>
       )}
-
-      <style jsx global>{`
-        @keyframes slideInRight {
-          from { transform: translateX(calc(100% + 40px)); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-      `}</style>
     </>
   );
 }
