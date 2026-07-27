@@ -31,7 +31,7 @@ export default async function TermsPage() {
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>3. Accounts</h2>
-              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Teacher and Community Collaborator accounts are created only by an Admin or Admin Assistant. Account holders are responsible for the accuracy of information they submit, including course details, photos, and descriptions.</p>
+              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Teacher and Community Collaborator accounts are created only by an Admin. Account holders are responsible for the accuracy of information they submit, including course details, photos, and descriptions.</p>
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>4. Content submitted by teachers and collaborators</h2>

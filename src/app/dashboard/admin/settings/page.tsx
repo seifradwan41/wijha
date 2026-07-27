@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 const roles = [
   { value: 'teacher', label: 'Teachers' },
   { value: 'community_collaborator', label: 'Collaborators' },
-  { value: 'admin_assistant', label: 'Admin Assistants' },
+  { value: 'admin_assistant', label: 'Admin' },
 ];
 
 export default function AdminSettingsPage() {
