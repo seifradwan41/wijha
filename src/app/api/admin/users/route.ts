@@ -32,7 +32,9 @@ export const POST = withRateLimit(async function POST(req: Request) {
     return NextResponse.json({ error: 'Name, username, and password are required' }, { status: 400 });
   }
 
-  const existing = await prisma.user.findFirst({ where: { username } });
+  const normalizedUsername = username.toLowerCase();
+
+  const existing = await prisma.user.findFirst({ where: { username: normalizedUsername } });
   if (existing) {
     return NextResponse.json({ error: 'A user with this username already exists' }, { status: 400 });
   }
@@ -48,7 +50,7 @@ export const POST = withRateLimit(async function POST(req: Request) {
   const user = await prisma.user.create({
     data: {
       name,
-      username,
+      username: normalizedUsername,
       role: newRole || 'teacher',
       status: 'active',
       createdBy: userId,
