@@ -3,18 +3,27 @@ import { useState, useEffect } from 'react';
 import ImageUpload from '@/components/ImageUpload';
 import { sanitizeCssUrl } from '@/lib/url-utils';
 
+interface Category { id: string; name: string; subcategories: { id: string; name: string }[] }
+
 export default function TeacherProfilePage() {
   const [profile, setProfile] = useState({
     name: '', description: '', teachingStyle: '', specialties: '',
     categories: '', subcategories: '', whatsappContact: '',
     avatarPhoto: '', bannerPhoto: '', profileStatus: 'draft',
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCats, setSelectedCats] = useState<string[]>([]);
+  const [selectedSubs, setSelectedSubs] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/teacher/profile').then(r => r.json()).then(data => {
+    Promise.all([
+      fetch('/api/teacher/profile').then(r => r.json()),
+      fetch('/api/admin/taxonomy/categories').then(r => r.json()),
+    ]).then(([data, cats]) => {
+      setCategories(cats);
       if (data) {
         setProfile({
           name: data.name || '',
@@ -28,10 +37,24 @@ export default function TeacherProfilePage() {
           bannerPhoto: data.bannerPhoto || '',
           profileStatus: data.profileStatus || 'draft',
         });
+        setSelectedCats(data.categories || []);
+        setSelectedSubs(data.subcategories || []);
       }
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    setProfile(prev => ({ ...prev, categories: selectedCats.join(', '), subcategories: selectedSubs.join(', ') }));
+  }, [selectedCats, selectedSubs]);
+
+  const toggleCat = (name: string) => {
+    setSelectedCats(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
+  };
+
+  const toggleSub = (name: string) => {
+    setSelectedSubs(prev => prev.includes(name) ? prev.filter(s => s !== name) : [...prev, name]);
+  };
 
   async function handleSave() {
     setSaving(true);
@@ -41,15 +64,22 @@ export default function TeacherProfilePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...profile,
+        categories: selectedCats,
+        subcategories: selectedSubs,
         specialties: profile.specialties.split(',').map(s => s.trim()).filter(Boolean),
-        categories: profile.categories.split(',').map(s => s.trim()).filter(Boolean),
-        subcategories: profile.subcategories.split(',').map(s => s.trim()).filter(Boolean),
       }),
     });
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   }
+
+  const chipStyle = (active: boolean): React.CSSProperties => ({
+    padding: '6px 14px', borderRadius: 100, border: '1px solid', fontSize: 13, cursor: 'pointer',
+    background: active ? 'var(--blue)' : '#fff',
+    color: active ? '#fff' : 'var(--ink-600)',
+    borderColor: active ? 'var(--blue)' : 'var(--ink-200)',
+  });
 
   const inputStyle: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 10, border: '1px solid rgba(27,31,42,0.12)', fontSize: 14, fontFamily: 'Inter, sans-serif', outline: 'none', boxSizing: 'border-box', background: '#fff', transition: 'border-color 0.2s' };
   const labelStyle: React.CSSProperties = { display: 'block', fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-mute)', marginBottom: 7 };
@@ -94,16 +124,30 @@ export default function TeacherProfilePage() {
           </div>
 
           <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 600, marginBottom: 16, paddingTop: 20, borderTop: '1px solid rgba(27,31,42,0.06)' }}>Categories &amp; Specialties</h3>
-          <div className="profile-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-            <div>
-              <label style={labelStyle}>Categories</label>
-              <input style={inputStyle} value={profile.categories} onChange={e => setProfile({...profile, categories: e.target.value})} placeholder="SAT, ACT" />
-            </div>
-            <div>
-              <label style={labelStyle}>Subcategories</label>
-              <input style={inputStyle} value={profile.subcategories} onChange={e => setProfile({...profile, subcategories: e.target.value})} placeholder="Math, Science" />
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={labelStyle}>Categories</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
+              {categories.map(c => (
+                <button key={c.id} type="button" onClick={() => toggleCat(c.name)} style={chipStyle(selectedCats.includes(c.name))}>{c.name}</button>
+              ))}
+              {categories.length === 0 && <span style={{ fontSize: 13, color: 'var(--ink-400)' }}>No categories available yet.</span>}
             </div>
           </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <label style={labelStyle}>Subcategories</label>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
+              {categories
+                .filter(c => selectedCats.includes(c.name) || selectedCats.length === 0)
+                .flatMap(c => c.subcategories)
+                .map(s => (
+                  <button key={s.id} type="button" onClick={() => toggleSub(s.name)} style={chipStyle(selectedSubs.includes(s.name))}>{s.name}</button>
+                ))}
+              {categories.flatMap(c => c.subcategories).length === 0 && <span style={{ fontSize: 13, color: 'var(--ink-400)' }}>No subcategories available yet.</span>}
+            </div>
+          </div>
+
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>Specialties</label>
             <input style={inputStyle} value={profile.specialties} onChange={e => setProfile({...profile, specialties: e.target.value})} placeholder="Advanced, Test-Prep, Foundation" />
@@ -141,7 +185,7 @@ export default function TeacherProfilePage() {
                 {!profile.avatarPhoto && (initials || '?')}
               </div>
               <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 17, fontWeight: 600, margin: '0 0 4px' }}>{profile.name || 'Your Name'}</h3>
-              <p style={{ fontSize: 12, color: 'var(--text-mute)', margin: '0 0 12px' }}>{profile.categories || 'Category'}</p>
+              <p style={{ fontSize: 12, color: 'var(--text-mute)', margin: '0 0 12px' }}>{selectedCats.join(', ') || 'Category'}</p>
               {specialtiesList.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center', marginBottom: 14 }}>
                   {specialtiesList.map(s => (
