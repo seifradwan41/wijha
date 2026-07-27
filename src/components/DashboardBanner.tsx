@@ -21,7 +21,7 @@ export default function DashboardBanner() {
     fetch('/api/settings/mobile-warning')
       .then(r => r.json())
       .then(data => {
-        if (data.enabled && window.innerWidth < 1024) {
+        if (data.enabled && window.innerWidth < 768) {
           const key = 'dismissed_mobile_warning';
           const ts = localStorage.getItem(key);
           if (!ts || Date.now() - Number(ts) > 86400000) {
@@ -92,7 +92,7 @@ export default function DashboardBanner() {
               Desktop Recommended
             </div>
             <div style={{ fontSize: 15, lineHeight: 1.6, color: '#92400e' }}>
-              This dashboard is best viewed on a desktop or laptop computer. Some features may not work well on mobile devices and tablets.
+              This dashboard is best viewed on a desktop, laptop, or tablet computer. Some features may not work well on small mobile screens.
             </div>
           </div>
           <button onClick={dismissWarn}

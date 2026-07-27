@@ -120,7 +120,7 @@ export default function AdminSettingsPage() {
           <div>
             <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 4px' }}>Mobile Warning Banner</h3>
             <p style={{ fontSize: 13, color: 'var(--text-mute)', margin: 0 }}>
-              Show a dismissible notice on mobile devices warning that the dashboard is best viewed on desktop. Users can dismiss it for 24 hours.
+              Show a dismissible notice on small mobile screens &mdash; tablets are fine.
             </p>
           </div>
           <button onClick={() => { setMwSaved(false); setMobileWarn(!mobileWarn); }}
