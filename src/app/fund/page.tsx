@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getSetting } from '@/lib/platform-settings';
 
-export default function FundPage() {
+export default async function FundPage() {
+  const wa = await getSetting('support_whatsapp');
   return (
     <>
       <div className="page-header">
@@ -30,10 +32,28 @@ export default function FundPage() {
               <span style={{ color: 'var(--teal)' }}>&#10003;</span> Fund new features like search filters and event tracking
             </div>
           </div>
-          <div style={{ padding: '20px 24px', borderRadius: 12, background: 'var(--paper)', textAlign: 'center' }}>
-            <p style={{ fontSize: 14, color: 'var(--text-mute)', margin: 0 }}>
-              Contribution options coming soon. For now, reach out to us at <strong>support@wijha.com</strong> to learn how you can help.
+          <div style={{ padding: '24px 28px', borderRadius: 12, background: 'linear-gradient(135deg, #065f46, #047857)', color: '#fff', textAlign: 'center' }}>
+            <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 8px' }}>Want to help? Get in touch on WhatsApp</p>
+            <p style={{ fontSize: 13, opacity: 0.85, margin: '0 0 16px' }}>
+              Contribution options coming soon. For now, reach out to us directly and we&apos;ll coordinate with you.
             </p>
+            <a
+              href={`https://wa.me/${wa}`}
+              target="_blank"
+              rel="noopener"
+              style={{
+                display: 'inline-block',
+                padding: '10px 32px',
+                borderRadius: 8,
+                background: '#fff',
+                color: '#065f46',
+                fontWeight: 600,
+                fontSize: 15,
+                textDecoration: 'none',
+              }}
+            >
+              Contact us on WhatsApp
+            </a>
           </div>
         </div>
       </section>
