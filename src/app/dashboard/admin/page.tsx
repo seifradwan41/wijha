@@ -44,6 +44,15 @@ export default function AdminDashboardHome() {
   const [loading, setLoading] = useState(true);
   const [rejectModal, setRejectModal] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [firstVisit, setFirstVisit] = useState(false);
+
+  useEffect(() => {
+    const key = 'visited_dashboard';
+    if (!localStorage.getItem(key)) {
+      localStorage.setItem(key, '1');
+      setFirstVisit(true);
+    }
+  }, []);
 
   useEffect(() => {
     Promise.all([
@@ -103,7 +112,7 @@ export default function AdminDashboardHome() {
       {/* Welcome */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 24, fontWeight: 600, margin: '0 0 4px' }}>
-          Welcome back, {name.split(' ')[0]} 👋
+          {firstVisit ? `Welcome, ${name.split(' ')[0]} to Wijha` : `Welcome back, ${name.split(' ')[0]}`} 👋
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-mute)', margin: 0 }}>
           You are logged in as <strong>{roleLabel}</strong>. Here is your overview.
