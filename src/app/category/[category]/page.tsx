@@ -19,7 +19,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         profileStatus: 'published',
         categories: { has: category },
       },
-      select: { id: true, name: true, categories: true, subcategories: true },
+      select: { id: true, name: true, categories: true, subcategories: true, avatarPhoto: true },
     }),
   ]);
 
@@ -68,7 +68,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               const initials = t.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
               return (
                 <Link key={t.id} href={`/teacher/${t.id}`} className="teacher-card">
-                  <div className="avatar" style={{ background: 'var(--blue)' }}>{initials}</div>
+                  <div className="avatar" style={t.avatarPhoto ? { background: `url(${t.avatarPhoto}) center/cover` } : { background: 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
                   <h4>{t.name}</h4>
                   <span>{t.subcategories.join(' · ')}</span>
                 </Link>
