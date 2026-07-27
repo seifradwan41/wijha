@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { prisma } from '@/lib/prisma';
 import SearchContent from './SearchContent';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SearchPage() {
   const [courses, teachers, categories, levels, examDates] = await Promise.all([
     prisma.course.findMany({

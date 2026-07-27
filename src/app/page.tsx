@@ -5,6 +5,8 @@ import EventsNews from '@/components/EventsNews';
 import { prisma } from '@/lib/prisma';
 import { sanitizeCssUrl } from '@/lib/url-utils';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [teachers, eventsNews] = await Promise.all([
     prisma.user.findMany({
