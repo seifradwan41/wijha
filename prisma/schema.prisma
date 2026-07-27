@@ -245,3 +245,10 @@ model TermsAcceptance {
 
   @@unique([userId, termsVersionId])
 }
+
+// ─── Platform Settings (key-value store for configurable site-wide settings) ───
+model PlatformSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @default("")
+}

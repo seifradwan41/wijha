@@ -11,7 +11,7 @@ export const POST = withRateLimit(async function POST(req: Request) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const role = (session.user as Record<string, unknown>)?.role as string;
-  if (role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (role !== 'admin' && role !== 'admin_assistant') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const body = await req.json();
   return NextResponse.json(await prisma.level.create({ data: { name: body.name } }));

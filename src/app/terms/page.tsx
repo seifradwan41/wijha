@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getSetting } from '@/lib/platform-settings';
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const wa = await getSetting('support_whatsapp');
   return (
     <>
       <div className="page-header">
@@ -55,7 +57,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>10. Contact</h2>
-              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>For questions about these terms, contact us at <strong>support@wijha.com</strong>.</p>
+              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>For questions about these terms, contact us on <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" style={{ fontWeight: 600, color: 'var(--blue)' }}>WhatsApp</a>.</p>
             </div>
           </div>
         </div>

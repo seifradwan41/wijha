@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { getSetting } from '@/lib/platform-settings';
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const wa = await getSetting('support_whatsapp');
   return (
     <>
       <div className="page-header">
@@ -52,7 +54,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>6. Data retention and deletion</h2>
-              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Data is retained for as long as an account is active. Teachers and collaborators may request data removal by contacting <strong>support@wijha.com</strong>. Requests will be routed to the Admin for processing.</p>
+              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Data is retained for as long as an account is active. Teachers and collaborators may request data removal by contacting us on <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" style={{ fontWeight: 600, color: 'var(--blue)' }}>WhatsApp</a>. Requests will be routed to the Admin for processing.</p>
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>7. Third parties</h2>
@@ -63,7 +65,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>8. User rights</h2>
-              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Users have the right to access, correct, or request deletion of their personal data. To exercise these rights, contact <strong>support@wijha.com</strong>.</p>
+              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>Users have the right to access, correct, or request deletion of their personal data. To exercise these rights, contact us on <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" style={{ fontWeight: 600, color: 'var(--blue)' }}>WhatsApp</a>.</p>
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>9. Cookies</h2>
@@ -71,7 +73,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h2 style={{ fontSize: 18, margin: '0 0 12px' }}>10. Contact</h2>
-              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>For questions about this privacy policy, contact us at <strong>support@wijha.com</strong>.</p>
+              <p style={{ color: 'var(--text-dark)', fontSize: 15, margin: 0 }}>For questions about this privacy policy, contact us on <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener" style={{ fontWeight: 600, color: 'var(--blue)' }}>WhatsApp</a>.</p>
             </div>
           </div>
         </div>

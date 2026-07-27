@@ -59,11 +59,12 @@ const assistantSections = [
   { label: 'Content', items: [
     { href: '/dashboard/admin/taxonomy', label: 'Taxonomy' },
     { href: '/dashboard/admin/terms', label: 'Terms & Conditions' },
+    { href: '/dashboard/admin/settings', label: 'Settings' },
   ]},
   { label: 'Communication', items: [
     { href: '/dashboard/admin/notifications', label: 'Notifications' },
     { href: '/dashboard/admin/chat', label: 'User Chat' },
-    { href: '/dashboard/admin/assistant-chat', label: 'Chat with Admin' },
+    { href: '/dashboard/admin/assistant-chat', label: 'Assistant Chat' },
   ]},
 ];
 
