@@ -70,9 +70,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               const initials = t.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
               return (
                 <Link key={t.id} href={`/teacher/${t.id}`} className="teacher-card">
-                  <div className="avatar" style={{ background: t.avatarPhoto ? 'transparent' : 'var(--blue)' }}>
-                    {t.avatarPhoto ? <img src={t.avatarPhoto} alt={t.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} /> : initials}
-                  </div>
+                  <div className="avatar" style={{ background: t.avatarPhoto ? `url(${t.avatarPhoto}) center/cover` : 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
                   <h4>{t.name}</h4>
                   <span>{t.subcategories.join(' · ')}</span>
                 </Link>

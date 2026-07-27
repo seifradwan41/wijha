@@ -246,7 +246,7 @@ section.block { padding: 120px 48px; max-width: 1240px; margin: 0 auto; }
 .teacher-card:hover { transform: translateY(-6px); box-shadow: 0 24px 44px -24px rgba(27, 31, 42, 0.25); }
 .avatar {
   width: 64px; height: 64px; border-radius: 50%; margin-bottom: 18px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
   font-family: 'Fraunces', serif; font-weight: 600; font-size: 20px; color: #fff;
 }
 .teacher-card h4 { margin: 0 0 4px; font-size: 17px; font-family: 'Fraunces', serif; font-weight: 600; }
