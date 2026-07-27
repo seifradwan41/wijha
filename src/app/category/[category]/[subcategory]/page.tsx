@@ -36,6 +36,7 @@ export default async function SubcategoryPage({ params }: { params: Promise<{ ca
   const teacherData = teachers.map(t => ({
     id: t.id,
     name: t.name,
+    avatarPhoto: t.avatarPhoto,
     description: t.description,
     teachingStyle: t.teachingStyle,
     specialties: t.specialties,
