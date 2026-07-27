@@ -14,9 +14,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { username: (credentials as Record<string, unknown>).username as string },
-        });
+        // Fallback: try lowercase if exact match fails
+        const username = (credentials as Record<string, unknown>).username as string;
+        let user = await prisma.user.findUnique({ where: { username } });
+        if (!user) {
+          user = await prisma.user.findUnique({ where: { username: username.toLowerCase() } });
+        }
 
         if (!user || user.status !== 'active') return null;
 
