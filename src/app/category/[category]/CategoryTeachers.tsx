@@ -6,6 +6,7 @@ interface Teacher {
   name: string;
   categories: string[];
   subcategories: string[];
+  avatarPhoto: string | null;
 }
 
 export default function CategoryTeachers({ teachers }: { teachers: Teacher[] }) {
@@ -30,8 +31,12 @@ export default function CategoryTeachers({ teachers }: { teachers: Teacher[] }) 
         const t = filtered[idx];
         if (!t) return;
         const initials = t.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
-        photo.textContent = initials;
-        photo.style.background = 'var(--blue)';
+        if (t.avatarPhoto) {
+          photo.style.background = `url(${t.avatarPhoto}) center/cover`;
+        } else {
+          photo.style.background = 'var(--blue)';
+        }
+        photo.textContent = t.avatarPhoto ? '' : initials;
         nameEl.textContent = t.name;
         specEl.textContent = t.subcategories.join(', ');
         dots.forEach((d, di) => d.classList.toggle('active', di === idx));
