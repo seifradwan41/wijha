@@ -5,6 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import HeartbeatPing from '@/components/HeartbeatPing';
 import TermsCheck from '@/components/TermsCheck';
 import DashboardTour, { TourStep } from '@/components/DashboardTour';
+import DashboardBanner from '@/components/DashboardBanner';
 
 const adminTourSteps: TourStep[] = [
   { target: '[data-tour="review-queue"]', title: 'Review Queue', description: 'This is where you approve or reject submissions from community collaborators. Check new content here daily.' },
@@ -91,6 +92,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
       <HeartbeatPing />
       <TermsCheck />
       <DashboardTour steps={tourSteps} storageKey="tour_admin" />
+      <DashboardBanner />
       <aside className="dashboard-sidebar">
         <div className="sidebar-logo" style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
