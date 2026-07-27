@@ -44,7 +44,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
         <div className="paths">
           {subs.map((sub) => (
-            <Link key={sub.id} href={`/category/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`} className={`path-card ${catKey}`} data-cat={catKey}>
+            <Link key={sub.id} href={`/category/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`} className={`path-card ${catKey}`} data-cat={catKey} data-sub={sub.name}>
               <div className="rot-photo-wrap"><div className="rot-photo" /></div>
               <span className="badge-pill">{category}</span>
               <h3>{sub.name}</h3>
