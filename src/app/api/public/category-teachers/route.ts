@@ -19,13 +19,14 @@ export async function GET() {
   for (const t of teachers) {
     const cats = t.categories.length > 0 ? t.categories : ['Other'];
     for (const cat of cats) {
-      const key = ['SAT', 'ACT'].includes(cat) ? cat : 'Other';
+      const rawKey = ['SAT', 'ACT'].includes(cat) ? cat : 'Other';
+      const key = rawKey.toLowerCase();
       if (!grouped[key]) grouped[key] = [];
       if (!grouped[key].some(e => e.name === t.name)) {
         grouped[key].push({
           name: t.name,
           subject: t.subcategories.join(' · ') || 'All levels',
-          color: categoryColors[key] || 'var(--slate)',
+          color: categoryColors[rawKey] || 'var(--slate)',
         });
       }
     }
