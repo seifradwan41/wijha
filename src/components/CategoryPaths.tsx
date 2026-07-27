@@ -1,20 +1,12 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
-const teachersByCategory: Record<string, { name: string; subject: string; color: string }[]> = {
-  sat: [
-    { name: 'Amr Mustafa', subject: 'Math · Basics & Advanced', color: 'var(--blue)' },
-    { name: 'Sarah Johnson', subject: 'English/RW · Foundation', color: 'var(--blue-soft)' },
-  ],
-  act: [
-    { name: 'Michael Chen', subject: 'Science · Full Course', color: 'var(--teal)' },
-    { name: 'Sarah Johnson', subject: 'English · Trial Prep', color: 'var(--teal-soft)' },
-  ],
-  other: [
-    { name: 'Aisha Ali', subject: 'University Admissions Counseling', color: 'var(--slate)' },
-  ],
-};
+interface TeacherEntry {
+  name: string;
+  subject: string;
+  color: string;
+}
 
 const categories = [
   { key: 'sat', label: 'SAT', title: 'Digital SAT', desc: 'Math and Reading & Writing, from first-time Basics to Advanced and trial-specific Test-Prep.', href: '/category/SAT' },
@@ -24,10 +16,20 @@ const categories = [
 
 export default function CategoryPaths() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [teachersByCategory, setTeachersByCategory] = useState<Record<string, TeacherEntry[]>>({});
+
+  useEffect(() => {
+    fetch('/api/public/category-teachers')
+      .then(r => r.json())
+      .then(data => setTeachersByCategory(data))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cards = containerRef.current?.querySelectorAll('.path-card');
+    const intervals: ReturnType<typeof setInterval>[] = [];
+
     cards?.forEach((card) => {
       const cat = (card as HTMLElement).dataset.cat;
       const list = teachersByCategory[cat || ''] || [];
@@ -54,7 +56,7 @@ export default function CategoryPaths() {
       render(0);
 
       if (list.length > 1 && !reduceMotion) {
-        setInterval(() => {
+        const id = setInterval(() => {
           photo.classList.add('is-out');
           caption.classList.add('is-out');
           setTimeout(() => {
@@ -64,9 +66,12 @@ export default function CategoryPaths() {
             caption.classList.remove('is-out');
           }, 500);
         }, 4500 + Math.random() * 1000);
+        intervals.push(id);
       }
     });
-  }, []);
+
+    return () => intervals.forEach(clearInterval);
+  }, [teachersByCategory]);
 
   return (
     <section className="block" id="paths">
