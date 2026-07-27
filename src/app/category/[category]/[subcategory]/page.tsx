@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import SubcategoryTeacherList from './SubcategoryTeacherList';
 
+export const dynamic = 'force-dynamic';
+
 export default async function SubcategoryPage({ params }: { params: Promise<{ category: string; subcategory: string }> }) {
   const { category: rawCategory, subcategory: rawSubcategory } = await params;
   const category = decodeURIComponent(rawCategory);
