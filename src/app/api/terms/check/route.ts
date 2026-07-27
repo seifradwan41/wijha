@@ -9,6 +9,12 @@ export async function GET() {
   const userId = (session.user as Record<string, unknown>)?.userId as string;
   const role = (session.user as Record<string, unknown>)?.role as string;
 
+  // Check if the user still exists in the database
+  const userExists = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } });
+  if (!userExists) {
+    return NextResponse.json({ needsAcceptance: false, userNotFound: true });
+  }
+
   const latestTerms = await prisma.termsVersion.findFirst({
     where: { roleScope: role },
     orderBy: { publishedAt: 'desc' },
