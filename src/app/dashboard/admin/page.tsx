@@ -24,6 +24,12 @@ const quickActions = [
   { label: 'Teacher Manager', href: '/dashboard/admin/teacher-manager', icon: '👤', desc: 'Manage courses and events for teachers' },
 ];
 
+const commonActions = [
+  { label: 'New Account', href: '/dashboard/admin/accounts', icon: '＋', desc: 'Create teacher or collaborator accounts' },
+  { label: 'Taxonomy', href: '/dashboard/admin/taxonomy', icon: '🏷️', desc: 'Manage categories, subjects, levels' },
+  { label: 'Teacher Manager', href: '/dashboard/admin/teacher-manager', icon: '👤', desc: 'Manage courses and events for teachers' },
+];
+
 export default function AdminDashboardHome() {
   const { data: session } = useSession();
   const user = session?.user as Record<string, unknown> | undefined;
@@ -31,6 +37,7 @@ export default function AdminDashboardHome() {
   const role = user?.role as string;
   const isAdmin = role === 'admin';
   const roleLabel = isAdmin ? 'Admin' : 'Admin Assistant';
+  const actions = isAdmin ? quickActions : commonActions;
 
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [stats, setStats] = useState<Stats>({ pendingSubmissions: 0, totalTeachers: 0, totalCollaborators: 0, totalCourses: 0, totalEvents: 0 });
@@ -133,7 +140,7 @@ export default function AdminDashboardHome() {
         gap: 10,
         marginBottom: 32,
       }}>
-        {quickActions.map(a => (
+        {actions.map(a => (
           <Link key={a.label} href={a.href} style={{
             background: '#fff',
             borderRadius: 14,
