@@ -14,7 +14,7 @@ export async function GET() {
     Other: 'var(--slate)',
   };
 
-  const grouped: Record<string, { name: string; subject: string; color: string }[]> = {};
+  const grouped: Record<string, { name: string; subject: string; color: string; avatarPhoto: string | null }[]> = {};
 
   for (const t of teachers) {
     const cats = t.categories.length > 0 ? t.categories : ['Other'];
@@ -27,6 +27,7 @@ export async function GET() {
           name: t.name,
           subject: t.subcategories.join(' · ') || 'All levels',
           color: categoryColors[rawKey] || 'var(--slate)',
+          avatarPhoto: t.avatarPhoto,
         });
       }
     }

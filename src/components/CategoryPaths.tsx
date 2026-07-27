@@ -6,6 +6,7 @@ interface TeacherEntry {
   name: string;
   subject: string;
   color: string;
+  avatarPhoto: string | null;
 }
 
 const categories = [
@@ -47,8 +48,12 @@ export default function CategoryPaths() {
       function render(idx: number) {
         const t = list[idx];
         const initials = t.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
-        photo.textContent = initials;
-        photo.style.background = t.color;
+        if (t.avatarPhoto) {
+          photo.style.background = `url(${t.avatarPhoto}) center/cover`;
+        } else {
+          photo.style.background = t.color;
+        }
+        photo.textContent = t.avatarPhoto ? '' : initials;
         nameEl.textContent = t.name;
         specEl.textContent = t.subject;
         dots.forEach((d, di) => d.classList.toggle('active', di === idx));
