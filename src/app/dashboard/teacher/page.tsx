@@ -2,6 +2,12 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
+const quickActions = [
+  { label: 'Chat', href: '/dashboard/teacher/chat', icon: '💬', desc: 'Message the admin team directly' },
+  { label: 'Edit Profile', href: '/dashboard/teacher/profile', icon: '👤', desc: 'Update your bio, photo, and contact info' },
+  { label: 'View Public Site', href: '/', icon: '🌐', desc: 'See how your profile looks to visitors' },
+];
+
 export default async function TeacherDashboardPage() {
   const session = await auth();
   const userId = (session?.user as Record<string, unknown>)?.userId as string;
@@ -65,13 +71,33 @@ export default async function TeacherDashboardPage() {
         </Link>
       </div>
 
-      <div style={{ background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.06)', padding: 28 }}>
-        <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, marginBottom: 16 }}>Quick Actions</h3>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <Link href="/dashboard/teacher/profile" className="btn-primary" style={{ fontSize: 13 }}>Edit Profile</Link>
-          <Link href="/dashboard/teacher/courses" className="btn-ghost" style={{ fontSize: 13, color: 'var(--text-dark)', borderColor: 'rgba(27,31,42,0.15)' }}>New Course</Link>
-          <Link href="/" className="btn-ghost" style={{ fontSize: 13, color: 'var(--text-dark)', borderColor: 'rgba(27,31,42,0.15)' }}>View Public Site</Link>
-        </div>
+      {/* Quick Actions */}
+      <h2 style={{ fontSize: 16, fontWeight: 600, fontFamily: 'Fraunces, serif', margin: '0 0 12px' }}>Quick Actions</h2>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: 10,
+        marginBottom: 32,
+      }}>
+        {quickActions.map(a => (
+          <Link key={a.label} href={a.href} style={{
+            background: '#fff',
+            borderRadius: 14,
+            border: '1px solid rgba(27,31,42,0.07)',
+            padding: '16px',
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            transition: 'border-color 0.2s',
+          }}>
+            <span style={{ fontSize: 22, flexShrink: 0 }}>{a.icon}</span>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-dark)', marginBottom: 2 }}>{a.label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-mute)', lineHeight: 1.3 }}>{a.desc}</div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );
