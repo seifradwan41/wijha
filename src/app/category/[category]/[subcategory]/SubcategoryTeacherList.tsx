@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { sanitizeCssUrl } from '@/lib/url-utils';
 
 interface TeacherData {
   id: string;
@@ -31,7 +32,7 @@ function TeacherCard({ teacher, index }: { teacher: TeacherData; index: number }
     <div style={{ background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.07)', overflow: 'hidden', transition: 'box-shadow 0.3s ease' }}>
       <button onClick={() => setExpanded(!expanded)} style={{ width: '100%', textAlign: 'left', padding: '20px 24px', border: 'none', background: 'transparent', cursor: 'pointer', fontFamily: 'inherit' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 12, background: teacher.avatarPhoto ? `url(${teacher.avatarPhoto}) center/cover` : c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 20, color: c.text }}>
+          <div style={{ width: 56, height: 56, borderRadius: 12, background: sanitizeCssUrl(teacher.avatarPhoto) ? `url(${sanitizeCssUrl(teacher.avatarPhoto)}) center/cover` : c.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden', fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: 20, color: c.text }}>
             {!teacher.avatarPhoto && initials}
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>

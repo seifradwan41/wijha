@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { sanitizeCssUrl } from '@/lib/url-utils';
 import CategoryTeachers from './CategoryTeachers';
 
 export const dynamic = 'force-dynamic';
@@ -70,7 +71,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
               const initials = t.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
               return (
                 <Link key={t.id} href={`/teacher/${t.id}`} className="teacher-card">
-                  <div className="avatar" style={{ background: t.avatarPhoto ? `url(${t.avatarPhoto}) center/cover` : 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
+                  <div className="avatar" style={{ background: sanitizeCssUrl(t.avatarPhoto) ? `url(${sanitizeCssUrl(t.avatarPhoto)}) center/cover` : 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
                   <h4>{t.name}</h4>
                   <span>{t.subcategories.join(' · ')}</span>
                 </Link>
