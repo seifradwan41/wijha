@@ -8,7 +8,7 @@ export const DELETE = withRateLimit(async function DELETE(req: Request, { params
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const role = (session.user as Record<string, unknown>)?.role as string;
-  if (role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (role !== 'admin' && role !== 'admin_assistant') return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   await prisma.subcategory.delete({ where: { id } });
   return NextResponse.json({ ok: true });

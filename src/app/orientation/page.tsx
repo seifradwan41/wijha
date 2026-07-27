@@ -32,12 +32,12 @@ Guests can browse freely without an account — they can explore categories, rea
 
 • Review and approve or reject event/news submissions from Teachers and Community Collaborators. Provide a reason when rejecting.
 • Manage Teacher and Collaborator accounts — suspend or delete accounts when needed. A reason is always required.
+• Manage taxonomy — add or edit categories, subjects, levels, grades, and exam dates that appear across the platform.
 • View and moderate any course on the platform — unpublish or delete content that violates guidelines.
 • Send notifications to Teachers and Collaborators to flag issues or share updates.
 • Use the Admin ↔ Assistant chat to coordinate internally. You can attach screenshots and link messages to specific courses or requests.
 
 What you cannot do (Admin-only):
-• Manage taxonomy — adding or editing categories, levels, grades, and exam dates.
 • Manage other Admin Assistant accounts — only full Admins can create or suspend assistants.`,
   },
 ];
@@ -61,9 +61,10 @@ const cardStyle: React.CSSProperties = {
 };
 
 export default function OrientationPage() {
-  const { update } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const name = ((session?.user as Record<string, unknown> | undefined)?.name as string) || 'Admin Assistant';
 
   const handleDismiss = async () => {
     setSaving(true);
@@ -81,7 +82,7 @@ export default function OrientationPage() {
     <div style={containerStyle}>
       <div style={cardStyle}>
         <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 28, fontWeight: 600, margin: '0 0 6px', color: 'var(--ink-900)' }}>
-          Welcome to Wijha
+          Welcome, {name} 👋
         </h1>
         <p style={{ fontSize: 14, color: 'var(--text-mute)', margin: '0 0 32px', lineHeight: 1.6 }}>
           Here&apos;s a quick overview of how the platform works and what you&apos;ll be doing. Take a few minutes to read through it — you&apos;ll only see this once.
