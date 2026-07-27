@@ -33,6 +33,7 @@ export default auth(async (req) => {
       const userRole = (session.user as Record<string, unknown>)?.role as string;
       const suspended = (session.user as Record<string, unknown>)?._suspended as boolean;
       const onboardingCompleted = (session.user as Record<string, unknown>)?._onboardingCompleted as boolean;
+      const orientationSeen = (session.user as Record<string, unknown>)?._orientationSeen as boolean;
 
       if (!roles.includes(userRole) || suspended) {
         return NextResponse.redirect(new URL('/', req.url));
@@ -40,6 +41,10 @@ export default auth(async (req) => {
 
       if (!onboardingCompleted) {
         return NextResponse.redirect(new URL('/onboarding', req.url));
+      }
+
+      if (userRole === 'admin_assistant' && !orientationSeen && pathname !== '/orientation') {
+        return NextResponse.redirect(new URL('/orientation', req.url));
       }
     }
   }
@@ -73,9 +78,19 @@ export default auth(async (req) => {
     if (target) return NextResponse.redirect(new URL(target, req.url));
   }
 
+  if (pathname === '/orientation') {
+    if (!session) return NextResponse.redirect(new URL('/login', req.url));
+    const userRole = (session.user as Record<string, unknown>)?.role as string;
+    const orientationSeen = (session.user as Record<string, unknown>)?._orientationSeen as boolean;
+    if (userRole !== 'admin_assistant') return NextResponse.redirect(new URL('/', req.url));
+    if (orientationSeen) {
+      return NextResponse.redirect(new URL('/dashboard/admin', req.url));
+    }
+  }
+
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/onboarding', '/api/:path*'],
+  matcher: ['/dashboard/:path*', '/onboarding', '/orientation', '/api/:path*'],
 };

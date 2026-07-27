@@ -47,6 +47,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           role: user.role,
           status: user.status,
           onboardingCompletedAt: user.onboardingCompletedAt,
+          orientationSeenAt: user.orientationSeenAt,
         };
       },
     }),
@@ -60,11 +61,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.status = (user as unknown as { status?: string }).status;
         token.username = (user as unknown as { username?: string }).username;
         token.onboardingCompletedAt = (user as unknown as { onboardingCompletedAt?: Date })?.onboardingCompletedAt?.toISOString() || null;
+        token.orientationSeenAt = (user as unknown as { orientationSeenAt?: Date })?.orientationSeenAt?.toISOString() || null;
       }
       if (trigger === 'update') {
         const s = session as Record<string, unknown> | undefined;
         if (s?.onboardingCompletedAt) {
           token.onboardingCompletedAt = s.onboardingCompletedAt as string;
+        }
+        if (s?.orientationSeenAt) {
+          token.orientationSeenAt = s.orientationSeenAt as string;
         }
       }
       return token;
@@ -76,6 +81,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         (session.user as unknown as { _username?: string })._username = token.username as string;
         (session.user as unknown as { _suspended?: boolean })._suspended = token.status !== 'active';
         (session.user as unknown as { _onboardingCompleted?: boolean })._onboardingCompleted = !!token.onboardingCompletedAt;
+        (session.user as unknown as { _orientationSeen?: boolean })._orientationSeen = !!token.orientationSeenAt;
       }
       return session;
     },
