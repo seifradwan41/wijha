@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { withRateLimit } from '@/lib/rate-limit';
 
-export async function GET() {
+export const GET = withRateLimit(async function GET() {
   const teachers = await prisma.user.findMany({
     where: { role: 'teacher', status: 'active', profileStatus: 'published' },
     select: { name: true, categories: true, subcategories: true, avatarPhoto: true },
@@ -34,4 +35,4 @@ export async function GET() {
   }
 
   return NextResponse.json(grouped);
-}
+});

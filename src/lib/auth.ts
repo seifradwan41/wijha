@@ -30,6 +30,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (!passwordMatch) return null;
 
+        // Fire-and-forget: update lastLoginAt/loginHistory
+        const now = new Date().toISOString();
+        prisma.user.update({
+          where: { id: user.id },
+          data: {
+            lastLoginAt: new Date(),
+            loginHistory: [...user.loginHistory.slice(-99), now],
+          },
+        }).catch(() => {});
+
         return {
           id: user.id,
           name: user.name,
@@ -41,7 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  session: { strategy: 'jwt', maxAge: 24 * 60 * 60 },
+  session: { strategy: 'jwt', maxAge: 60 * 60 },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (user) {
