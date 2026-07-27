@@ -8,6 +8,11 @@ export const POST = withRateLimit(async function POST(req: Request) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const userId = (session.user as Record<string, unknown>)?.userId as string;
+  if (!userId) return NextResponse.json({ error: 'Invalid session' }, { status: 401 });
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
   const body = await req.json();
   const { termsVersion, termsId } = body;
 
