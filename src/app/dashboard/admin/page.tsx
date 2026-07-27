@@ -36,7 +36,7 @@ export default function AdminDashboardHome() {
   const name = (user?.name as string) || 'Admin';
   const role = user?.role as string;
   const isAdmin = role === 'admin';
-  const roleLabel = isAdmin ? 'Admin' : 'Admin Assistant';
+  const roleLabel = 'Admin';
   const actions = isAdmin ? quickActions : commonActions;
 
   const [submissions, setSubmissions] = useState<Submission[]>([]);
