@@ -1,17 +1,18 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { withRateLimit } from '@/lib/rate-limit';
 
-export async function GET() {
+export const GET = withRateLimit(async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json(null, { status: 401 });
 
   const userId = (session.user as Record<string, unknown>)?.userId as string;
   const user = await prisma.user.findUnique({ where: { id: userId } });
   return NextResponse.json(user);
-}
+});
 
-export async function PUT(req: Request) {
+export const PUT = withRateLimit(async function PUT(req: Request) {
   const session = await auth();
   if (!session) return NextResponse.json(null, { status: 401 });
 
@@ -35,4 +36,4 @@ export async function PUT(req: Request) {
   });
 
   return NextResponse.json({ ok: true });
-}
+});

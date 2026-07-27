@@ -1,19 +1,20 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { withRateLimit } from '@/lib/rate-limit';
 
 const teacherSelect = { id: true, name: true, avatarPhoto: true };
 
-export async function GET() {
+export const GET = withRateLimit(async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json([], { status: 401 });
 
   const userId = (session.user as Record<string, unknown>)?.userId as string;
   const events = await prisma.eventNews.findMany({ where: { teacherId: userId }, include: { teacher: { select: teacherSelect } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json(events);
-}
+});
 
-export async function POST(req: Request) {
+export const POST = withRateLimit(async function POST(req: Request) {
   const session = await auth();
   if (!session) return NextResponse.json([], { status: 401 });
 
@@ -34,9 +35,9 @@ export async function POST(req: Request) {
 
   const events = await prisma.eventNews.findMany({ where: { teacherId: userId }, include: { teacher: { select: teacherSelect } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json(events);
-}
+});
 
-export async function PATCH(req: Request) {
+export const PATCH = withRateLimit(async function PATCH(req: Request) {
   const session = await auth();
   if (!session) return NextResponse.json([], { status: 401 });
 
@@ -46,9 +47,9 @@ export async function PATCH(req: Request) {
   const userId = (session.user as Record<string, unknown>)?.userId as string;
   const events = await prisma.eventNews.findMany({ where: { teacherId: userId }, include: { teacher: { select: teacherSelect } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json(events);
-}
+});
 
-export async function DELETE(req: Request) {
+export const DELETE = withRateLimit(async function DELETE(req: Request) {
   const session = await auth();
   if (!session) return NextResponse.json([], { status: 401 });
 
@@ -58,4 +59,4 @@ export async function DELETE(req: Request) {
   const userId = (session.user as Record<string, unknown>)?.userId as string;
   const events = await prisma.eventNews.findMany({ where: { teacherId: userId }, include: { teacher: { select: teacherSelect } }, orderBy: { createdAt: 'desc' } });
   return NextResponse.json(events);
-}
+});

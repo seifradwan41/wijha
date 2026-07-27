@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { withRateLimit } from '@/lib/rate-limit';
 
-export async function POST(req: Request, { params }: { params: Promise<{ threadId: string }> }) {
+export const POST = withRateLimit(async function POST(req: Request, { params }: { params: Promise<{ threadId: string }> }) {
   const { threadId } = await params;
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -14,4 +15,4 @@ export async function POST(req: Request, { params }: { params: Promise<{ threadI
   msgs.push({ sender: 'collaborator', text, timestamp: new Date().toISOString() });
   await prisma.chatThread.update({ where: { id: threadId }, data: { messages: JSON.stringify(msgs) } });
   return NextResponse.json({ ok: true });
-}
+});
