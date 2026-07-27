@@ -20,10 +20,13 @@ export async function PUT(req: Request) {
   if (role !== 'admin' && role !== 'admin_assistant') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
-  const { number } = await req.json();
-  if (typeof number !== 'string') {
-    return NextResponse.json({ error: 'Invalid number' }, { status: 400 });
+  const body = await req.json();
+  // Support both { key, value } and { number } for backward compat
+  const key = body.key || 'support_whatsapp';
+  const value = body.value ?? body.number;
+  if (typeof value !== 'string') {
+    return NextResponse.json({ error: 'Invalid value' }, { status: 400 });
   }
-  const value = await setSetting('support_whatsapp', number);
-  return NextResponse.json({ number: value });
+  const saved = await setSetting(key, value);
+  return NextResponse.json({ [key === 'support_whatsapp' ? 'number' : 'value']: saved });
 }

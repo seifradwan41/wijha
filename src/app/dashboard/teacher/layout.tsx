@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import TermsCheck from '@/components/TermsCheck';
 import DashboardTour, { TourStep } from '@/components/DashboardTour';
+import DashboardBanner from '@/components/DashboardBanner';
 
 const tourSteps: TourStep[] = [
   { target: '[data-tour="overview"]', title: 'Overview', description: 'Your dashboard home. See your course stats, published content, and pending reviews at a glance.' },
@@ -34,6 +35,7 @@ export default function TeacherDashboardLayout({ children }: { children: React.R
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--paper)' }}>
       <TermsCheck />
       <DashboardTour steps={tourSteps} storageKey="tour_teacher" />
+      <DashboardBanner />
       <aside className="dashboard-sidebar">
         <div className="sidebar-logo" style={{ padding: '24px 20px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
