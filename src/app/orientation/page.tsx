@@ -16,18 +16,18 @@ Guests can browse freely without an account — they can explore categories, rea
 
 • Edit their profile — add a bio, teaching style, specialties, and profile photo. A preview is available before publishing.
 • Create and publish courses — they control the draft → published toggle themselves. Courses appear publicly once published.
-• Create events and news — but these require Admin or Admin Assistant approval before they go live. Teachers submit a draft; you review it.`,
+• Create events and news — but these require Admin approval before they go live. Teachers submit a draft; you review it.`,
   },
   {
     title: 'What a Community Collaborator can do',
     body: `Community Collaborators help surface courses, events, and news they've found in the community. They can submit requests for new content, but:
 
-• Everything a Collaborator submits requires review by an Admin or Admin Assistant before it goes live.
+• Everything a Collaborator submits requires review by an Admin before it goes live.
 • They never publish directly — you are the gatekeeper for all collaborator-sourced content.
 • They can track the status of their submissions and receive notifications when approved or rejected.`,
   },
   {
-    title: 'What YOU (Admin Assistant) can do',
+    title: 'What YOU can do',
     body: `This is your daily workflow on Wijha:
 
 • Review and approve or reject event/news submissions from Teachers and Community Collaborators. Provide a reason when rejecting.
@@ -38,7 +38,7 @@ Guests can browse freely without an account — they can explore categories, rea
 • Use the Admin ↔ Assistant chat to coordinate internally. You can attach screenshots and link messages to specific courses or requests.
 
 What you cannot do (Admin-only):
-• Manage other Admin Assistant accounts — only full Admins can create or suspend assistants.`,
+• Manage other assistant accounts — only full Admins can create or suspend assistants.`,
   },
 ];
 
@@ -64,7 +64,7 @@ export default function OrientationPage() {
   const { data: session, update } = useSession();
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const name = ((session?.user as Record<string, unknown> | undefined)?.name as string) || 'Admin Assistant';
+  const name = ((session?.user as Record<string, unknown> | undefined)?.name as string) || 'Admin';
 
   const handleDismiss = async () => {
     setSaving(true);

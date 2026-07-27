@@ -13,7 +13,7 @@ const adminTourSteps: TourStep[] = [
   { target: '[data-tour="accounts"]', title: 'Accounts', description: 'Manage all user accounts. Create new teachers, assistants, or collaborators. Suspend or change passwords here.' },
   { target: '[data-tour="teacher-manager"]', title: 'Teacher Manager', description: 'Manage any teacher\'s courses and events on their behalf. Create, edit, or publish content for them.' },
   { target: '[data-tour="user-chat"]', title: 'User Chat', description: 'Chat directly with teachers and collaborators. Respond to their questions and requests.' },
-  { target: '[data-tour="assistant-chat"]', title: 'Assistant Chat', description: 'Private chat with your admin assistants. Watch words are monitored here for quality control.' },
+  { target: '[data-tour="assistant-chat"]', title: 'Admin Chat', description: 'Private chat channel with the admin team. Watch words are monitored here for quality control.' },
   { target: '[data-tour="sign-out"]', title: 'Sign Out', description: 'Click here to securely sign out when you\'re done.' },
 ];
 
@@ -33,7 +33,7 @@ const adminSections = [
   ]},
   { label: 'People', items: [
     { href: '/dashboard/admin/accounts', label: 'Accounts' },
-    { href: '/dashboard/admin/assistants', label: 'Admin Assistants' },
+    { href: '/dashboard/admin/assistants', label: 'Assistants' },
     { href: '/dashboard/admin/teacher-manager', label: 'Teacher Manager' },
   ]},
   { label: 'Content', items: [
@@ -44,7 +44,7 @@ const adminSections = [
   { label: 'Communication', items: [
     { href: '/dashboard/admin/notifications', label: 'Notifications' },
     { href: '/dashboard/admin/chat', label: 'User Chat' },
-    { href: '/dashboard/admin/assistant-chat', label: 'Assistant Chat' },
+    { href: '/dashboard/admin/assistant-chat', label: 'Admin Chat' },
   ]},
 ];
 
@@ -65,7 +65,7 @@ const assistantSections = [
   { label: 'Communication', items: [
     { href: '/dashboard/admin/notifications', label: 'Notifications' },
     { href: '/dashboard/admin/chat', label: 'User Chat' },
-    { href: '/dashboard/admin/assistant-chat', label: 'Assistant Chat' },
+    { href: '/dashboard/admin/assistant-chat', label: 'Admin Chat' },
   ]},
 ];
 
@@ -109,7 +109,7 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
             </div>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-on-ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-on-ink-mute)', fontFamily: 'IBM Plex Mono, monospace' }}>{isAdmin ? 'Admin' : 'Admin Assistant'}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-on-ink-mute)', fontFamily: 'IBM Plex Mono, monospace' }}>Admin</div>
             </div>
           </div>
         </div>

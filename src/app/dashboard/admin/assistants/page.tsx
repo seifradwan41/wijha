@@ -57,8 +57,8 @@ export default function AssistantsPage() {
     <div>
       <div className="dash-page-header">
         <div>
-          <h1>Admin Assistants</h1>
-          <div className="dash-header-sub">Manage admin assistant accounts and birthday mode.</div>
+          <h1>Assistants</h1>
+          <div className="dash-header-sub">Manage assistant accounts and birthday mode.</div>
         </div>
         <button onClick={() => setCreateModal(true)} className="btn-primary" style={{ fontSize: 13, padding: '10px 18px', flexShrink: 0 }}>+ New Assistant</button>
       </div>
@@ -82,7 +82,7 @@ export default function AssistantsPage() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {assistants.length === 0 ? (
-          <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: '40px 0', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>No admin assistants yet.</p>
+          <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: '40px 0', fontFamily: 'IBM Plex Mono, monospace', fontSize: 13 }}>No assistants yet.</p>
         ) : assistants.map(a => (
           <div key={a.id} className="dash-card" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #dc2626, #f59e0b)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Fraunces, serif', fontWeight: 600, fontSize: 14, color: '#fff', flexShrink: 0 }}>

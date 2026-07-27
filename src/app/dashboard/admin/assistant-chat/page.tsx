@@ -147,8 +147,8 @@ export default function AssistantChatPage() {
     <div>
       <div className="dash-page-header">
         <div>
-          <h1>{isAdmin ? 'Assistant Chat' : 'Chat with Admin'}</h1>
-          <div className="dash-header-sub">{isAdmin ? 'Direct messages with your admin assistants.' : 'Send messages and files to the admin team.'}</div>
+          <h1>{isAdmin ? 'Admin Chat' : 'Chat with Admin'}</h1>
+          <div className="dash-header-sub">{isAdmin ? 'Direct messages with the admin team.' : 'Send messages and files to the admin team.'}</div>
         </div>
       </div>
 

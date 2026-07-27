@@ -27,7 +27,7 @@ export default async function PrivacyPage() {
                 <p style={{ margin: '0 0 8px' }}><strong>Guests:</strong> No personal data required to browse the platform. No account or login is needed to view public pages.</p>
                 <p style={{ margin: '0 0 8px' }}><strong>Teachers:</strong> Name, contact/WhatsApp number, bio, photos, course details, and profile information.</p>
                 <p style={{ margin: '0 0 8px' }}><strong>Community Collaborators:</strong> Name, contact information, and submitted content.</p>
-                <p style={{ margin: '0 0 8px' }}><strong>Admin and Admin Assistant:</strong> Name, contact information, and login activity (last login, login history).</p>
+                <p style={{ margin: '0 0 8px' }}><strong>Admin:</strong> Name, contact information, and login activity (last login, login history).</p>
                 <p style={{ margin: 0 }}><strong>Automatically:</strong> Basic technical data (IP address, browser type) may be collected for rate limiting and security purposes.</p>
               </div>
             </div>

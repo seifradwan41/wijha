@@ -13,7 +13,7 @@ interface TermsVersion {
 
 const roleLabels: Record<string, string> = {
   admin: 'Admin',
-  admin_assistant: 'Admin Assistant',
+  admin_assistant: 'Admin',
   teacher: 'Teacher',
   community_collaborator: 'Community Collaborator',
 };
@@ -82,7 +82,7 @@ export default function TermsAdminPage() {
                   <select value={form.roleScope} onChange={e => setForm({ ...form, roleScope: e.target.value })} style={{ width: '100%', padding: '10px 14px', borderRadius: 10, border: '1px solid var(--ink-200)', fontSize: 14 }}>
                     <option value="teacher">Teacher</option>
                     <option value="admin">Admin</option>
-                    <option value="admin_assistant">Admin Assistant</option>
+                    <option value="admin_assistant">Admin</option>
                     <option value="community_collaborator">Community Collaborator</option>
                   </select>
                 </div>
