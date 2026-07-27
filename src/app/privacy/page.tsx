@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getSetting } from '@/lib/platform-settings';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PrivacyPage() {
   const wa = await getSetting('support_whatsapp');
   return (
