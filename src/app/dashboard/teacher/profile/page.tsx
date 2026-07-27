@@ -171,7 +171,32 @@ export default function TeacherProfilePage() {
             <button onClick={handleSave} disabled={saving} className="btn-primary">
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
-            {saved && <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ Profile saved successfully</span>}
+            {profile.profileStatus !== 'published' && (
+              <button onClick={async () => {
+                setSaving(true);
+                const body = {
+                  ...profile,
+                  categories: selectedCats,
+                  subcategories: selectedSubs,
+                  specialties: profile.specialties.split(',').map(s => s.trim()).filter(Boolean),
+                  profileStatus: 'published',
+                };
+                await fetch('/api/teacher/profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                setProfile(prev => ({ ...prev, profileStatus: 'published' }));
+                setSaving(false);
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+              }} disabled={saving} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: '#16a34a', color: '#fff', fontWeight: 600, fontSize: 14, cursor: 'pointer', opacity: saving ? 0.5 : 1 }}>
+                {saving ? 'Publishing...' : 'Publish Profile'}
+              </button>
+            )}
+            {profile.profileStatus === 'published' && (
+              <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1C4.14 1 1 4.14 1 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm-1 11L3 8l1.5-1.5L7 9l4.5-4.5L13 6l-6 6z" fill="#16a34a"/></svg>
+                Profile is published — visible to students
+              </span>
+            )}
+            {saved && profile.profileStatus !== 'published' && <span style={{ fontSize: 13, color: '#16a34a', fontWeight: 500 }}>✓ Saved</span>}
           </div>
         </div>
 

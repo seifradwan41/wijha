@@ -30,6 +30,7 @@ export async function PUT(req: Request) {
       whatsappContact: body.whatsappContact,
       avatarPhoto: body.avatarPhoto,
       bannerPhoto: body.bannerPhoto,
+      profileStatus: body.profileStatus || 'draft',
     },
   });
 
