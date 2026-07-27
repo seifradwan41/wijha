@@ -52,8 +52,12 @@ export default function TeacherProfilePage() {
     setSelectedCats(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
   };
 
-  const toggleSub = (name: string) => {
-    setSelectedSubs(prev => prev.includes(name) ? prev.filter(s => s !== name) : [...prev, name]);
+  const toggleSub = (qualified: string) => {
+    setSelectedSubs(prev => {
+      if (prev.includes(qualified)) return prev.filter(s => s !== qualified);
+      const name = qualified.split('::')[1];
+      return [...prev.filter(s => s !== name), qualified];
+    });
   };
 
   async function handleSave() {
@@ -135,18 +139,27 @@ export default function TeacherProfilePage() {
             </div>
           </div>
 
-          <div style={{ marginBottom: 24 }}>
-            <label style={labelStyle}>Subcategories</label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
-              {categories
-                .filter(c => selectedCats.includes(c.name) || selectedCats.length === 0)
-                .flatMap(c => c.subcategories)
-                .map(s => (
-                  <button key={s.id} type="button" onClick={() => toggleSub(s.name)} style={chipStyle(selectedSubs.includes(s.name))}>{s.name}</button>
-                ))}
-              {categories.flatMap(c => c.subcategories).length === 0 && <span style={{ fontSize: 13, color: 'var(--ink-400)' }}>No subcategories available yet.</span>}
+  <div style={{ marginBottom: 24 }}>
+    <label style={labelStyle}>Subcategories</label>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 8 }}>
+      {categories
+        .filter(c => selectedCats.includes(c.name) || selectedCats.length === 0)
+        .map(c => (
+          <div key={c.id}>
+            <div style={{ fontSize: 11, fontFamily: 'IBM Plex Mono, monospace', color: 'var(--text-mute)', marginBottom: 6 }}>{c.name}</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {c.subcategories.map(s => {
+                const qualified = `${c.name}::${s.name}`;
+                return (
+                  <button key={s.id} type="button" onClick={() => toggleSub(qualified)} style={chipStyle(selectedSubs.includes(qualified) || selectedSubs.includes(s.name))}>{s.name}</button>
+                );
+              })}
             </div>
           </div>
+        ))}
+      {categories.flatMap(c => c.subcategories).length === 0 && <span style={{ fontSize: 13, color: 'var(--ink-400)' }}>No subcategories available yet.</span>}
+    </div>
+  </div>
 
           <div style={{ marginBottom: 24 }}>
             <label style={labelStyle}>Specialties</label>

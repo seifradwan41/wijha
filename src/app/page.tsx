@@ -4,6 +4,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import EventsNews from '@/components/EventsNews';
 import { prisma } from '@/lib/prisma';
 import { sanitizeCssUrl } from '@/lib/url-utils';
+import { displaySub } from '@/lib/subcategory-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,7 +52,7 @@ export default async function HomePage() {
                   <a key={t.id} href={`/teacher/${t.id}`} className="teacher-card" style={{ textDecoration: 'none' }}>
                     <div className="avatar" style={{ background: sanitizeCssUrl(t.avatarPhoto) ? `url(${sanitizeCssUrl(t.avatarPhoto)}) center/cover` : 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
                     <h4>{t.name}</h4>
-                    <span>{t.subcategories.join(' · ')}</span>
+                    <span>{t.subcategories.map(displaySub).join(' · ')}</span>
                   </a>
                 );
               })

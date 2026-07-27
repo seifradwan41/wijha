@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { displaySub, matchesSub } from '@/lib/subcategory-utils';
 
 interface Teacher {
   id: string;
@@ -17,7 +18,7 @@ export default function CategoryTeachers({ teachers }: { teachers: Teacher[] }) 
     const cards = document.querySelectorAll('.path-card');
     cards.forEach((card) => {
       const sub = (card as HTMLElement).dataset.sub || '';
-      const filtered = sub ? teachers.filter(t => t.subcategories.includes(sub)) : teachers;
+      const filtered = sub ? teachers.filter(t => t.subcategories.some(s => matchesSub(s, sub))) : teachers;
       if (filtered.length === 0) return;
       const photo = card.querySelector('.rot-photo') as HTMLElement;
       const caption = card.querySelector('.rot-caption') as HTMLElement;
@@ -38,7 +39,7 @@ export default function CategoryTeachers({ teachers }: { teachers: Teacher[] }) 
         }
         photo.textContent = t.avatarPhoto ? '' : initials;
         nameEl.textContent = t.name;
-        specEl.textContent = t.subcategories.join(', ');
+        specEl.textContent = t.subcategories.map(displaySub).join(', ');
         dots.forEach((d, di) => d.classList.toggle('active', di === idx));
       }
       render(0);

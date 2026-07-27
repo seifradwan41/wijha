@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import CategoryTeachers from './CategoryTeachers';
+import { displaySub } from '@/lib/subcategory-utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,7 +79,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
                     )}
                   </div>
                   <h4>{t.name}</h4>
-                  <span>{t.subcategories.join(' · ')}</span>
+                  <span>{t.subcategories.map(displaySub).join(' · ')}</span>
                 </Link>
               );
             })
