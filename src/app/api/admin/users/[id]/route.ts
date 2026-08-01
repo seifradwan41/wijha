@@ -58,7 +58,6 @@ export const DELETE = withRateLimit(async function DELETE(req: Request, { params
     prisma.communityCollaboratorSubmission.deleteMany({ where: { submittedBy: id } }),
     prisma.chatThread.deleteMany({ where: { OR: [{ openedBy: id }, { assignedTo: id }] } }),
     prisma.adminAssistantMessage.deleteMany({ where: { OR: [{ senderId: id }, { recipientId: id }] } }),
-    prisma.watchWordHit.deleteMany({ where: { adminAssistantId: id } }),
     prisma.termsAcceptance.deleteMany({ where: { userId: id } }),
     prisma.user.delete({ where: { id } }),
   ]);

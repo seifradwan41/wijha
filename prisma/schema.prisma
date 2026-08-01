@@ -44,7 +44,6 @@ model User {
   lastLoginAt       DateTime?
   lastActiveAt      DateTime?
   loginHistory      String[]  // array of ISO timestamps
-  birthdayModeActive Boolean @default(false)
   orientationSeenAt  DateTime?
 
   // Relations
@@ -57,7 +56,6 @@ model User {
   chatThreadsAssigned ChatThread[] @relation("ChatThreadAssignee")
   adminMessagesSent     AdminAssistantMessage[] @relation("AdminMsgSender")
   adminMessagesReceived AdminAssistantMessage[] @relation("AdminMsgRecipient")
-  watchWordHits   WatchWordHit[]
   termsAcceptances TermsAcceptance[]
 }
 
@@ -200,27 +198,6 @@ model AdminAssistantMessage {
 
   sender    User @relation("AdminMsgSender", fields: [senderId], references: [id])
   recipient User @relation("AdminMsgRecipient", fields: [recipientId], references: [id])
-}
-
-// ─── Watch Word (admin-managed list) ───
-model WatchWord {
-  id        String   @id @default(cuid())
-  word      String
-  createdAt DateTime @default(now())
-
-  hits WatchWordHit[]
-}
-
-// ─── Watch Word Hit ───
-model WatchWordHit {
-  id               String   @id @default(cuid())
-  wordId           String
-  adminAssistantId String
-  timestamp        DateTime @default(now())
-  fullMessageText  String
-
-  word           WatchWord @relation(fields: [wordId], references: [id])
-  adminAssistant User      @relation(fields: [adminAssistantId], references: [id])
 }
 
 // ─── Terms Version & Acceptance ───

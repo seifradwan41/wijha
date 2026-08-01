@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import HeartbeatPing from '@/components/HeartbeatPing';
-import BirthdayChecker from '@/components/BirthdayChecker';
 import TermsCheck from '@/components/TermsCheck';
 import DashboardTour, { TourStep } from '@/components/DashboardTour';
 import DashboardBanner from '@/components/DashboardBanner';
@@ -138,7 +137,6 @@ export default function AdminDashboardLayout({ children }: { children: React.Rea
       </aside>
 
       <main className="dashboard-main" style={{ marginLeft: 256, flex: 1, padding: '32px 40px' }}>
-        <BirthdayChecker />
         {children}
       </main>
     </div>

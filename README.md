@@ -120,7 +120,7 @@ Layout: `src/app/dashboard/collaborator/layout.tsx` — sidebar with 240px width
 | `/dashboard/admin/courses` | `src/app/dashboard/admin/courses/page.tsx` | All courses — filter by status, unpublish/delete any |
 | `/dashboard/admin/events` | `src/app/dashboard/admin/events/page.tsx` | Events/news review — approve/reject teacher submissions |
 | `/dashboard/admin/accounts` | `src/app/dashboard/admin/accounts/page.tsx` | Account management — view/suspend/delete, create new accounts |
-| `/dashboard/admin/assistants` | `src/app/dashboard/admin/assistants/page.tsx` | Admin assistant management — create/suspend/delete, birthday mode toggle |
+| `/dashboard/admin/assistants` | `src/app/dashboard/admin/assistants/page.tsx` | Admin assistant management — create/suspend/delete |
 | `/dashboard/admin/taxonomy` | `src/app/dashboard/admin/taxonomy/page.tsx` | Taxonomy CRUD — categories, subcategories, levels, grades, exam dates |
 | `/dashboard/admin/notifications` | `src/app/dashboard/admin/notifications/page.tsx` | Send notifications to any user, view sent history |
 | `/dashboard/admin/chat` | `src/app/dashboard/admin/chat/chat/page.tsx` | Chat threads — two-way with teachers/collaborators |
@@ -181,8 +181,6 @@ Layout: `src/app/dashboard/admin/layout.tsx` — sidebar with 256px width, group
 | `Notification` | Admin-to-user messages with read/unread state |
 | `ChatThread` | Two-way chat between users and admin |
 | `AdminAssistantMessage` | Admin ↔ Admin Assistant 1:1 messaging |
-| `WatchWord` | Admin-managed watch-word list for monitoring |
-| `WatchWordHit` | Logged watch-word matches |
 
 ## Workflows
 

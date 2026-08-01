@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 interface Assistant {
-  id: string; name: string; username: string; status: string; lastLoginAt: string | null; lastActiveAt: string | null; birthdayModeActive: boolean;
+  id: string; name: string; username: string; status: string; lastLoginAt: string | null; lastActiveAt: string | null;
 }
 
 export default function AssistantsPage() {
@@ -38,13 +38,6 @@ export default function AssistantsPage() {
     load();
   };
 
-  const handleToggleBirthday = async (id: string) => {
-    const a = assistants.find(a => a.id === id);
-    if (!a) return;
-    await fetch('/api/admin/assistants/' + id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ birthdayModeActive: !a.birthdayModeActive }) });
-    load();
-  };
-
   const isOnline = (lastActiveAt: string | null) => {
     if (!lastActiveAt) return false;
     const diff = Date.now() - new Date(lastActiveAt).getTime();
@@ -58,7 +51,7 @@ export default function AssistantsPage() {
       <div className="dash-page-header">
         <div>
           <h1>Assistants</h1>
-          <div className="dash-header-sub">Manage assistant accounts and birthday mode.</div>
+          <div className="dash-header-sub">Manage assistant accounts.</div>
         </div>
         <button onClick={() => setCreateModal(true)} className="btn-primary" style={{ fontSize: 13, padding: '10px 18px', flexShrink: 0 }}>+ New Assistant</button>
       </div>
@@ -98,7 +91,6 @@ export default function AssistantsPage() {
             </div>
             <span className={`status-pill ${a.status}`}>{a.status}</span>
             <div className="dash-card-actions" style={{ flexWrap: 'wrap' }}>
-              <button onClick={() => handleToggleBirthday(a.id)} style={{ padding: '4px 12px', borderRadius: 6, border: a.birthdayModeActive ? '1px solid var(--blue)' : '1px solid rgba(27,31,42,0.12)', background: a.birthdayModeActive ? 'rgba(47,111,237,0.1)' : '#fff', color: a.birthdayModeActive ? 'var(--blue)' : 'var(--text-mute)', fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>🎂 Birthday</button>
               {a.status === 'active' ? (
                 <button onClick={() => handleSuspend(a.id)} style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #f59e0b', background: '#fff', color: '#f59e0b', fontSize: 12, cursor: 'pointer' }}>Suspend</button>
               ) : (

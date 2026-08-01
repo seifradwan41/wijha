@@ -66,19 +66,5 @@ export const POST = withRateLimit(async function POST(req: Request) {
     },
   });
 
-  if (text) {
-    const watchWords = await prisma.watchWord.findMany();
-    const lowerText = text.toLowerCase();
-    for (const ww of watchWords) {
-      if (lowerText.includes(ww.word.toLowerCase())) {
-        const receiverRole = (await prisma.user.findUnique({ where: { id: targetRecipientId }, select: { role: true } }))?.role;
-        const assistantId = receiverRole === 'admin_assistant' ? targetRecipientId : userId;
-        await prisma.watchWordHit.create({
-          data: { wordId: ww.id, adminAssistantId: assistantId, fullMessageText: text },
-        });
-      }
-    }
-  }
-
   return NextResponse.json(message);
 });

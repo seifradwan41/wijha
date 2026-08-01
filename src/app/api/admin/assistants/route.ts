@@ -12,7 +12,7 @@ export const GET = withRateLimit(async function GET() {
 
   const assistants = await prisma.user.findMany({
     where: { role: 'admin_assistant' },
-    select: { id: true, name: true, username: true, status: true, lastLoginAt: true, birthdayModeActive: true },
+    select: { id: true, name: true, username: true, status: true, lastLoginAt: true },
     orderBy: { createdAt: 'desc' },
   });
   return NextResponse.json(assistants);

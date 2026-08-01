@@ -6,8 +6,6 @@ async function main() {
   console.log('Cleaning database...');
 
   // Delete in order (respect foreign keys)
-  await prisma.watchWordHit.deleteMany();
-  await prisma.watchWord.deleteMany();
   await prisma.termsAcceptance.deleteMany();
   await prisma.termsVersion.deleteMany();
   await prisma.adminAssistantMessage.deleteMany();

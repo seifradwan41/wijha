@@ -34,7 +34,6 @@ Phase 4 adds the complete admin and admin assistant dashboard with 8 new pages a
 - Lists all admin assistant accounts
 - Create new assistant accounts
 - Suspend/activate/delete assistants
-- Birthday mode toggle (fun feature from spec)
 
 ### `/dashboard/admin/taxonomy` — Taxonomy Management
 Two-column layout with full CRUD:
@@ -72,7 +71,7 @@ Two-column layout with full CRUD:
 ### Admin Assistants
 - `GET /api/admin/assistants` — List assistants
 - `POST /api/admin/assistants` — Create assistant with hashed password
-- `PATCH /api/admin/assistants/[id]` — Update status/birthday mode
+- `PATCH /api/admin/assistants/[id]` — Update status
 - `DELETE /api/admin/assistants/[id]` — Delete assistant
 
 ### Notifications
