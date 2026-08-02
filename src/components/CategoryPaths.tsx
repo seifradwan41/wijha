@@ -41,7 +41,7 @@ export default function CategoryPaths() {
       const nameEl = card.querySelector('.rot-name') as HTMLElement;
       const specEl = card.querySelector('.rot-spec') as HTMLElement;
       const dotsWrap = card.querySelector('.rot-dots') as HTMLElement;
-      dotsWrap.innerHTML = list.map(() => '<span></span>').join('');
+      dotsWrap.replaceChildren(...list.map(() => document.createElement('span')));
       const dots = dotsWrap.querySelectorAll('span');
       let i = 0;
 
