@@ -2,6 +2,10 @@
   "name": "wijha",
   "version": "0.1.0",
   "private": true,
+  "contributors": [
+    "Codex (OpenAI)",
+    "Claude Code (Anthropic)"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
