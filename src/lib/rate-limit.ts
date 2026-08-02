@@ -3,8 +3,19 @@ type RateLimitEntry = { count: number; resetAt: number };
 const store = new Map<string, RateLimitEntry>();
 
 function getClientIp(req: Request): string {
+  // Try multiple headers in order of trust
+  // In production, configure your reverse proxy to set X-Real-IP
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp.trim();
+
   const xff = req.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
+  if (xff) {
+    // Take the first IP (original client) and validate it
+    const ip = xff.split(',')[0].trim();
+    // Basic IP format validation
+    if (/^[\d.:a-f]+$/.test(ip)) return ip;
+  }
+
   return '127.0.0.1';
 }
 
