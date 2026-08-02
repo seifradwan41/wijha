@@ -14,7 +14,7 @@ const UpdateProfileSchema = z.object({
   whatsappContact: z.string().max(20).optional(),
   avatarPhoto: z.string().url().optional().nullable(),
   bannerPhoto: z.string().url().optional().nullable(),
-  profileStatus: z.enum(['draft', 'published']).optional(),
+  profileStatus: z.enum(['draft', 'published']).default('draft'),
 });
 
 export const GET = withRateLimit(async function GET() {
