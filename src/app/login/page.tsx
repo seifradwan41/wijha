@@ -1,5 +1,6 @@
 'use client';
 import { Suspense, useState } from 'react';
+import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -35,10 +36,10 @@ function LoginForm() {
   return (
     <div style={{ width: '100%', maxWidth: 400, background: '#fff', borderRadius: 18, border: '1px solid rgba(27,31,42,0.07)', padding: 40 }}>
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <a href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 24, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+        <Link href="/" style={{ fontFamily: 'Fraunces, serif', fontSize: 24, fontWeight: 600, color: 'var(--text-on-ink)', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10 }}>
           <span style={{ width: 26, height: 26, borderRadius: '50%', border: '1.5px solid var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: 'var(--blue)', fontFamily: 'IBM Plex Mono, monospace' }}>و</span>
           Wijha
-        </a>
+        </Link>
         <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 22, fontWeight: 600, marginTop: 20, marginBottom: 8, color: 'var(--text-dark)' }}>Sign in to your dashboard</h1>
         <p style={{ fontSize: 14, color: 'var(--text-mute)' }}>Enter your credentials to continue</p>
       </div>
