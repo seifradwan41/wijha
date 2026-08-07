@@ -1,33 +1,25 @@
-import ConstellationHero from '@/components/ConstellationHero';
-import CategoryPaths from '@/components/CategoryPaths';
-import ScrollReveal from '@/components/ScrollReveal';
-import EventsNews from '@/components/EventsNews';
-import { prisma } from '@/lib/prisma';
-import { sanitizeCssUrl } from '@/lib/url-utils';
-import { displaySub } from '@/lib/subcategory-utils';
+import ConstellationHero from "@/components/ConstellationHero";
+import CategoryPaths from "@/components/CategoryPaths";
+import ScrollReveal from "@/components/ScrollReveal";
+import { prisma } from "@/lib/prisma";
+import { sanitizeCssUrl } from "@/lib/url-utils";
+import { displaySub } from "@/lib/subcategory-utils";
+import { teacherColor } from "@/lib/avatar-colors";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [teachers, eventsNews] = await Promise.all([
-    prisma.user.findMany({
-      where: { role: 'teacher', status: 'active', profileStatus: 'published' },
-      select: { id: true, name: true, categories: true, subcategories: true, avatarPhoto: true },
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.eventNews.findMany({
-      where: { status: 'published' },
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, title: true, description: true, type: true, createdAt: true, photo: true },
-    }),
-  ]);
-
-  const events = eventsNews.filter(e => e.type === 'event').map(e => ({
-    id: e.id, title: e.title, description: e.description, type: e.type, createdAt: e.createdAt.toISOString(), photo: e.photo,
-  }));
-  const news = eventsNews.filter(e => e.type === 'news').map(e => ({
-    id: e.id, title: e.title, description: e.description, type: e.type, createdAt: e.createdAt.toISOString(), photo: e.photo,
-  }));
+  const teachers = await prisma.user.findMany({
+    where: { role: "teacher", status: "active", profileStatus: "published" },
+    select: {
+      id: true,
+      name: true,
+      categories: true,
+      subcategories: true,
+      avatarPhoto: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <>
@@ -40,19 +32,48 @@ export default async function HomePage() {
           <div className="section-head">
             <span className="eyebrow2">Who&apos;s teaching</span>
             <h2>Real teachers you&apos;d otherwise find by chance</h2>
-            <p>The instructors already running courses across the region — now searchable in one place, instead of one WhatsApp group at a time.</p>
+            <p>
+              The instructors already running courses across the region — now
+              searchable in one place, instead of one WhatsApp group at a time.
+            </p>
           </div>
           <div className="teacher-row">
             {teachers.length === 0 ? (
-              <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: '40px 0' }}>No teachers available yet.</p>
+              <p
+                style={{
+                  color: "var(--text-mute)",
+                  textAlign: "center",
+                  padding: "40px 0",
+                }}
+              >
+                No teachers available yet.
+              </p>
             ) : (
               teachers.map((t) => {
-                const initials = t.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
+                const initials = t.name
+                  .split(" ")
+                  .map((w: string) => w[0])
+                  .slice(0, 2)
+                  .join("");
                 return (
-                  <a key={t.id} href={`/teacher/${t.id}`} className="teacher-card" style={{ textDecoration: 'none' }}>
-                    <div className="avatar" style={{ background: sanitizeCssUrl(t.avatarPhoto) ? `url(${sanitizeCssUrl(t.avatarPhoto)}) center/cover` : 'var(--blue)' }}>{!t.avatarPhoto && initials}</div>
+                  <a
+                    key={t.id}
+                    href={`/teacher/${t.id}`}
+                    className="teacher-card"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <div
+                      className="avatar"
+                      style={{
+                        background: sanitizeCssUrl(t.avatarPhoto)
+                          ? `url(${sanitizeCssUrl(t.avatarPhoto)}) center/cover`
+                          : teacherColor(t.name),
+                      }}
+                    >
+                      {!t.avatarPhoto && initials}
+                    </div>
                     <h4>{t.name}</h4>
-                    <span>{t.subcategories.map(displaySub).join(' · ')}</span>
+                    <span>{t.subcategories.map(displaySub).join(" · ")}</span>
                   </a>
                 );
               })
@@ -60,8 +81,6 @@ export default async function HomePage() {
           </div>
         </ScrollReveal>
       </section>
-
-      <EventsNews events={events} news={news} />
 
       <section className="block" id="mission">
         <ScrollReveal>
@@ -89,12 +108,46 @@ export default async function HomePage() {
             </div>
             <div>
               <span className="eyebrow2">Our goal</span>
-              <h2>Nobody should miss the right teacher because of the wrong group chat.</h2>
-              <p>Wijha exists to close the gap between great teaching and the students who need it — before the clock on the next trial date runs out.</p>
+              <h2>
+                Nobody should miss the right teacher because of the wrong group
+                chat.
+              </h2>
+              <p>
+                Wijha exists to close the gap between great teaching and the
+                students who need it — before the clock on the next trial date
+                runs out.
+              </p>
               <div className="values">
-                <div className="value"><div className="dot" /><div><b>Transparency</b><span>Level, schedule, format and exam window — stated clearly, not buried in a flyer.</span></div></div>
-                <div className="value"><div className="dot" /><div><b>Trust</b><span>Every listed teacher is verified through the same network that already recommends them.</span></div></div>
-                <div className="value"><div className="dot" /><div><b>Timing</b><span>Built around real SAT and ACT trial dates, so students find courses that finish in time — not after.</span></div></div>
+                <div className="value">
+                  <div className="dot" />
+                  <div>
+                    <b>Transparency</b>
+                    <span>
+                      Level, schedule, format and exam window — stated clearly,
+                      not buried in a flyer.
+                    </span>
+                  </div>
+                </div>
+                <div className="value">
+                  <div className="dot" />
+                  <div>
+                    <b>Trust</b>
+                    <span>
+                      Every listed teacher is verified through the same network
+                      that already recommends them.
+                    </span>
+                  </div>
+                </div>
+                <div className="value">
+                  <div className="dot" />
+                  <div>
+                    <b>Timing</b>
+                    <span>
+                      Built around real SAT and ACT trial dates, so students
+                      find courses that finish in time — not after.
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -107,10 +160,27 @@ export default async function HomePage() {
             <span className="eyebrow2">Find a course</span>
             <h2>Search by subject, level and exam date</h2>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <a href="/search" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ textAlign: "center" }}>
+            <a
+              href="/search"
+              className="btn-primary"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
+            >
               Open Search
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </a>
           </div>
         </ScrollReveal>
