@@ -36,7 +36,7 @@ const adminTourSteps: TourStep[] = [
     target: '[data-tour="assistant-chat"]',
     title: "Admin Chat",
     description:
-      "Private chat channel with the admin team.",
+      "Private chat channel with the admin team. Watch words are monitored here for quality control.",
   },
   {
     target: '[data-tour="sign-out"]',

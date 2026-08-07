@@ -1,11 +1,16 @@
-import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-import CategoryTeachers from './CategoryTeachers';
-import { displaySub } from '@/lib/subcategory-utils';
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import CategoryTeachers from "./CategoryTeachers";
+import { displaySub } from "@/lib/subcategory-utils";
+import { teacherColor } from "@/lib/avatar-colors";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}) {
   const { category: rawCategory } = await params;
   const category = decodeURIComponent(rawCategory);
   const catKey = category.toLowerCase();
@@ -17,12 +22,18 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
     }),
     prisma.user.findMany({
       where: {
-        role: 'teacher',
-        status: 'active',
-        profileStatus: 'published',
+        role: "teacher",
+        status: "active",
+        profileStatus: "published",
         categories: { has: category },
       },
-      select: { id: true, name: true, categories: true, subcategories: true, avatarPhoto: true },
+      select: {
+        id: true,
+        name: true,
+        categories: true,
+        subcategories: true,
+        avatarPhoto: true,
+      },
     }),
   ]);
 
@@ -45,14 +56,36 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
         <div className="paths">
           {subs.map((sub) => (
-            <Link key={sub.id} href={`/category/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`} className={`path-card ${catKey}`} data-cat={catKey} data-sub={sub.name}>
-              <div className="rot-photo-wrap"><div className="rot-photo" /></div>
+            <Link
+              key={sub.id}
+              href={`/category/${encodeURIComponent(category)}/${encodeURIComponent(sub.name)}`}
+              className={`path-card ${catKey}`}
+              data-cat={catKey}
+              data-sub={sub.name}
+            >
+              <div className="rot-photo-wrap">
+                <div className="rot-photo" />
+              </div>
               <span className="badge-pill">{category}</span>
               <h3>{sub.name}</h3>
-              <p>{sub.name} courses under {category}</p>
-              <div className="rot-caption"><div className="rot-name" /><div className="rot-spec" /></div>
+              <p>
+                {sub.name} courses under {category}
+              </p>
+              <div className="rot-caption">
+                <div className="rot-name" />
+                <div className="rot-spec" />
+              </div>
               <div className="rot-dots" />
-              <span className="go">View courses <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8H14M14 8L9 3M14 8L9 13" stroke="currentColor" strokeWidth="1.5" /></svg></span>
+              <span className="go">
+                View courses{" "}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M2 8H14M14 8L9 3M14 8L9 13"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </span>
             </Link>
           ))}
         </div>
@@ -65,21 +98,49 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
         <div className="teacher-row">
           {teachers.length === 0 ? (
-            <p style={{ color: 'var(--text-mute)', textAlign: 'center', padding: '40px 0' }}>No teachers available yet. Check back soon!</p>
+            <p
+              style={{
+                color: "var(--text-mute)",
+                textAlign: "center",
+                padding: "40px 0",
+              }}
+            >
+              No teachers available yet. Check back soon!
+            </p>
           ) : (
             teachers.map((t) => {
-              const initials = t.name.split(' ').map((w: string) => w[0]).slice(0, 2).join('');
+              const initials = t.name
+                .split(" ")
+                .map((w: string) => w[0])
+                .slice(0, 2)
+                .join("");
               return (
-                <Link key={t.id} href={`/teacher/${t.id}`} className="teacher-card">
-                  <div className="avatar" style={{ background: 'var(--blue)' }}>
+                <Link
+                  key={t.id}
+                  href={`/teacher/${t.id}`}
+                  className="teacher-card"
+                >
+                  <div
+                    className="avatar"
+                    style={{ background: teacherColor(t.name) }}
+                  >
                     {t.avatarPhoto ? (
-                      <img src={t.avatarPhoto} alt={t.name} style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                      <img
+                        src={t.avatarPhoto}
+                        alt={t.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                        }}
+                      />
                     ) : (
                       <span>{initials}</span>
                     )}
                   </div>
                   <h4>{t.name}</h4>
-                  <span>{t.subcategories.map(displaySub).join(' · ')}</span>
+                  <span>{t.subcategories.map(displaySub).join(" · ")}</span>
                 </Link>
               );
             })
